@@ -1,0 +1,10 @@
+# Ignore artifacts:
+build
+coverage
+
+**/*.yml
+**/.github
+**/*.json
+**/*.cjs
+**/*.css
+**/*.md
