@@ -64,7 +64,7 @@ const LeftMenu: React.FC = () => {
       icon: <AppstoreOutlined style={{ fontSize: '20px' }} />,
       label: 'Users',
       onClick: () => {
-        router.push('/profile');
+        router.push('/users');
       },
     },
   ];
