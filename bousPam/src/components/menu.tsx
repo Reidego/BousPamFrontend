@@ -13,7 +13,7 @@ import {
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
-import { BousPam, ArrowLeft, ArrowRigth } from '@/utils/svg';
+import { BousPam, ArrowLeft, ArrowRigth, Terrmianl } from '@/utils/svg';
 import { useRouter } from 'next/navigation';
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -53,7 +53,7 @@ const LeftMenu: React.FC = () => {
     },
     {
       key: '4',
-      icon: <MailOutlined style={{ fontSize: '20px' }} />,
+      icon: <Terrmianl />,
       label: 'Terminals',
       onClick: () => {
         router.push('/profile');
