@@ -14,43 +14,60 @@ import {
 import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
 import { BousPam, ArrowLeft, ArrowRigth } from '@/utils/svg';
+import { useRouter } from 'next/navigation';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
-const items: MenuItem[] = [
-  {
-    key: '1',
-    icon: <HomeOutlined style={{ fontSize: '20px' }} />,
-    label: 'Profile',
-  },
-  {
-    key: '2',
-    icon: <DesktopOutlined style={{ fontSize: '20px' }} />,
-    label: 'Transport companies',
-  },
-  {
-    key: '3',
-    icon: <ContainerOutlined style={{ fontSize: '20px' }} />,
-    label: 'Option 3',
-  },
-  {
-    key: '4',
-    icon: <MailOutlined style={{ fontSize: '20px' }} />,
-    label: 'Terminals',
-  },
-  {
-    key: '5',
-    icon: <AppstoreOutlined style={{ fontSize: '20px' }} />,
-    label: 'Users',
-  },
-];
-
 const LeftMenu: React.FC = () => {
   const [collapsed, setCollapsed] = useState(true);
+  const router = useRouter();
 
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
   };
+
+  const items: MenuItem[] = [
+    {
+      key: '1',
+      icon: <HomeOutlined style={{ fontSize: '20px' }} />,
+      label: 'Profile',
+      onClick: () => {
+        router.push('/profile');
+      },
+    },
+    {
+      key: '2',
+      icon: <DesktopOutlined style={{ fontSize: '20px' }} />,
+      label: 'Transport companies',
+      onClick: () => {
+        router.push('/transportCompanies');
+      },
+    },
+    {
+      key: '3',
+      icon: <ContainerOutlined style={{ fontSize: '20px' }} />,
+      label: 'Option 3',
+      onClick: () => {
+        router.push('/profile');
+      },
+    },
+    {
+      key: '4',
+      icon: <MailOutlined style={{ fontSize: '20px' }} />,
+      label: 'Terminals',
+      onClick: () => {
+        router.push('/profile');
+      },
+    },
+    {
+      key: '5',
+      icon: <AppstoreOutlined style={{ fontSize: '20px' }} />,
+      label: 'Users',
+      onClick: () => {
+        router.push('/profile');
+      },
+    },
+  ];
 
   return (
     <div

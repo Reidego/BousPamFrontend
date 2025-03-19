@@ -1,47 +1,5 @@
-import Menu from '@/components/menu';
-// import Button from '@/components/button';
-import Input from '@/components/input';
-import { UploadItems } from '@/utils/svg';
-import { Button } from 'antd';
+import { Divider } from 'antd';
 
 export default function Prfile() {
-  const user = {
-    name: 'John Thomas Shelby',
-    phoneNmber: '+7 (922) 333-33-33',
-    gender: 'male',
-    role: 'Admin',
-    birthdey: '13.02.2003',
-  };
-
-  const infoFilds = [
-    { id: 1, fildName: 'Gender', fildData: user.gender },
-    { id: 2, fildName: 'Role', fildData: user.role },
-    { id: 3, fildName: 'Date of birth', fildData: user.birthdey },
-  ];
-
-  return (
-    <div className="w-full">
-      <div className="text-black mx-[238px] mt-[78px] bg-[#fff] rounded-[8px] px-[128px] py-[56px] flex flex-col gap-y-[56px]">
-        <div className="flex flex-col gap-y-[16px]">
-          <span className="text-[30px] font-bold">{user.name}</span>
-          <span className="text-[16px] opacity-45">{user.phoneNmber}</span>
-        </div>
-        <div className="flex flex-col gap-y-[24px]">
-          <span className="text-[20px] font-bold">Personal information</span>
-          <div className="flex flex-col gap-y-[8px]">
-            {infoFilds.map((infoFild) => {
-              return (
-                <div className="flex text-[16px]" key={infoFild.id}>
-                  <span className="pr-[4px] opacity-45">
-                    {infoFild.fildName} :
-                  </span>
-                  <span>{infoFild.fildData}</span>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  return <div className="text-black">Просто страница</div>;
 }
