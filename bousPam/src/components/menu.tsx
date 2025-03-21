@@ -32,7 +32,7 @@ const LeftMenu: React.FC = () => {
       icon: <HomeOutlined style={{ fontSize: '20px' }} />,
       label: 'Profile',
       onClick: () => {
-        router.push('/profile');
+        router.push('/');
       },
     },
     {
@@ -43,20 +43,20 @@ const LeftMenu: React.FC = () => {
         router.push('/transportCompanies');
       },
     },
-    {
-      key: '3',
-      icon: <ContainerOutlined style={{ fontSize: '20px' }} />,
-      label: 'Option 3',
-      onClick: () => {
-        router.push('/profile');
-      },
-    },
+    // {
+    //   key: '3',
+    //   icon: <ContainerOutlined style={{ fontSize: '20px' }} />,
+    //   label: 'Option 3',
+    //   onClick: () => {
+    //     router.push('/profile');
+    //   },
+    // },
     {
       key: '4',
       icon: <Terrmianl />,
       label: 'Terminals',
       onClick: () => {
-        router.push('/profile');
+        router.push('/terminals');
       },
     },
     {
