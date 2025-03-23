@@ -1,13 +1,17 @@
-'use client';
-import WorkSpace from '@/components/workSpace';
-import { SearchOutlined } from '@ant-design/icons';
-import { Input, Pagination, Button, Modal, Divider } from 'antd';
-import { useState } from 'react';
-import { unstableSetRender } from 'antd';
-import { createRoot } from 'react-dom/client';
+import HeaderList from '@/components/headerList';
 import WorkWindow from '@/components/workWindow';
+
 const List = () => {
-  return <div>Просто имя и ничего большео!!!</div>;
+  const filds = [
+    { id: 1, fildName: '№' },
+    { id: 2, fildName: 'Name ' },
+    { id: 3, fildName: 'Surname ' },
+  ];
+  return (
+    <div className="w-full border-[#F0F0F0] rounded-[8px] border-[0.5px]">
+      <HeaderList filds={filds} />
+    </div>
+  );
 };
 
 export default function Users() {

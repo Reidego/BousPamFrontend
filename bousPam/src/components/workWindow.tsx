@@ -53,8 +53,8 @@ const WorkWindow: React.FC<WorkWindowProps> = ({ children, title }) => {
 
   return (
     <WorkSpace>
-      <div className="flex flex-row text-[24px] justify-between font-bold">
-        <span className="text-[30px]">{title}</span>
+      <div className="flex text-[24px] justify-between  w-full font-bold">
+        <span className="text-[24px] flex-nowrap">{title}</span>
         <div className="flex w-[577px]">
           <Input
             placeholder="Search"
@@ -66,8 +66,8 @@ const WorkWindow: React.FC<WorkWindowProps> = ({ children, title }) => {
           />
         </div>
       </div>
-      <div>{children}</div>
-      <div className="flex text-[24px] justify-between font-bold">
+      <div className="min-h-[533px] w-full">{children}</div>
+      <div className="flex text-[24px] justify-between w-full font-bold">
         <Pagination defaultCurrent={1} total={50} />
         <Button type="primary" onClick={showModal}>
           Create new cashier
