@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
-import LeftMenu from '@/components/menu';
+import { LeftMenu } from '@/components';
 import './globals.css';
 import '@ant-design/v5-patch-for-react-19';
+import { StoreProvider } from '@/store/StoreProvider';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -24,14 +25,17 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const isAuth = false;
   return (
+    // <StoreProvider>
     <html lang="en">
       <body
         className={`text-black ${geistSans.variable} ${geistMono.variable} antialiased flex`}
       >
-        <LeftMenu />
+        {isAuth ? <LeftMenu /> : ''}
         {children}
       </body>
     </html>
+    // </StoreProvider>
   );
 }

@@ -1,39 +1,71 @@
-export default function Prfile() {
-  const user = {
-    name: 'John Thomas Shelby',
-    phoneNmber: '+7 (922) 333-33-33',
-    gender: 'male',
-    role: 'Admin',
-    birthdey: '13.02.2003',
+'use client';
+import { Input, Button, Space, notification } from 'antd';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { BousPam } from '@/utils/svg';
+import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
+import '@ant-design/v5-patch-for-react-19';
+import { text } from 'stream/consumers';
+
+type NotificationType = 'success' | 'info' | 'warning' | 'error';
+
+export default function Auth() {
+  const router = useRouter();
+  const [api, contextHolder] = notification.useNotification();
+
+  const openNotificationWithIcon = (type: NotificationType) => {
+    api[type]({
+      placement: 'top',
+      message: 'Failed authorization: ',
+      description: 'Please check your login and password.',
+      showProgress: true,
+      pauseOnHover: false,
+      duration: 3,
+    });
   };
 
-  const infoFilds = [
-    { id: 1, fildName: 'Gender', fildData: user.gender },
-    { id: 2, fildName: 'Role', fildData: user.role },
-    { id: 3, fildName: 'Date of birth', fildData: user.birthdey },
-  ];
-
+  // const [passwordVisible, setPasswordVisible] = useState(false);
   return (
-    <div className="w-full">
-      <div className="text-black mx-[238px] mt-[78px] bg-[#fff] rounded-[8px] px-[128px] py-[56px] items-start justify-start flex flex-col gap-y-[56px]">
-        <div className="flex flex-col gap-y-[32px]">
-          <div className="flex flex-col gap-y-[16px]">
-            <span className="text-[30px] font-bold">{user.name}</span>
-            <span className="text-[16px] opacity-45">{user.phoneNmber}</span>
-          </div>
-          <div className="flex flex-col gap-y-[24px]">
-            <span className="text-[20px] font-bold">Personal information</span>
-            <div className="flex flex-col gap-y-[8px]">
-              {infoFilds.map((infoFild) => {
-                return (
-                  <div className="flex text-[16px]" key={infoFild.id}>
-                    <span className="pr-[4px] opacity-45">
-                      {infoFild.fildName} :
-                    </span>
-                    <span>{infoFild.fildData}</span>
-                  </div>
-                );
-              })}
+    <div className="w-full h-screen flex flex-col items-center text-black">
+      <div className="bg-[#FFFFFF] h-[73px] w-full flex flex-row items-center justify-start pl-[40px] gap-x-[7px]">
+        <BousPam />
+        <span className="text-black font-bold text-[20px]">BOUS PAM</span>
+      </div>
+      <div className="flex items-center justify-center pb-[73px] h-full">
+        <div className="w-[592px] h-[458px] bg-[#fff] rounded-[8px] flex flex-col gap items-center justify-start py-[64px] px-[96px]">
+          <span className="text-[38px] font-medium">Login</span>
+          <div className="w-[400px] text-[14px] leading-[22px]">
+            <div className="mt-[48px]">
+              <span className="pb-[8px]">Login</span>
+              <Input style={{ width: '100%', height: 40 }} />
+            </div>
+            <div className="mt-[24px] flex flex-col">
+              <span className="pb-[8px]">Password</span>
+              {contextHolder}
+              <Space direction="vertical">
+                <Input.Password
+                  style={{ width: '100%', height: 40 }}
+                  placeholder="input password"
+                  iconRender={(visible) =>
+                    visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                  }
+                />
+              </Space>
+            </div>
+            <div className="mt-[32px]">
+              <Space>
+                <Button
+                  type="primary"
+                  style={{ width: '100%', height: 40, fontSize: 16 }}
+                  onClick={() => {
+                    openNotificationWithIcon('error');
+
+                    // router.push('/profile');
+                  }}
+                >
+                  Login
+                </Button>
+              </Space>
             </div>
           </div>
         </div>

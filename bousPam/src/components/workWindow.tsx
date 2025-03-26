@@ -19,7 +19,7 @@ unstableSetRender((node, container) => {
 interface WorkWindowProps {
   children: React.ReactNode;
   title: string;
-  //   isBackBotton: Boolean;
+  paginationLength: number;
 }
 
 const handleSearch = (value: string) => console.log(value);
@@ -36,7 +36,11 @@ const suffix = (
   </button>
 );
 
-const WorkWindow: React.FC<WorkWindowProps> = ({ children, title }) => {
+const WorkWindow: React.FC<WorkWindowProps> = ({
+  children,
+  title,
+  paginationLength,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const showModal = () => {
@@ -68,7 +72,7 @@ const WorkWindow: React.FC<WorkWindowProps> = ({ children, title }) => {
       </div>
       <div className="min-h-[533px] w-full">{children}</div>
       <div className="flex text-[24px] justify-between w-full font-bold">
-        <Pagination defaultCurrent={1} total={50} />
+        <Pagination defaultCurrent={1} total={paginationLength} />
         <Button type="primary" onClick={showModal}>
           Create new cashier
         </Button>

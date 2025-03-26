@@ -2,14 +2,9 @@
 import React, { useState } from 'react';
 import {
   AppstoreOutlined,
-  ContainerOutlined,
   DesktopOutlined,
-  MailOutlined,
-  PieChartOutlined,
   HomeOutlined,
   LogoutOutlined,
-  ArrowLeftOutlined,
-  ArrowRightOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
@@ -21,7 +16,6 @@ type MenuItem = Required<MenuProps>['items'][number];
 const LeftMenu: React.FC = () => {
   const [collapsed, setCollapsed] = useState(true);
   const router = useRouter();
-
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
   };
@@ -32,7 +26,7 @@ const LeftMenu: React.FC = () => {
       icon: <HomeOutlined style={{ fontSize: '20px' }} />,
       label: 'Profile',
       onClick: () => {
-        router.push('/');
+        router.push('/profile');
       },
     },
     {

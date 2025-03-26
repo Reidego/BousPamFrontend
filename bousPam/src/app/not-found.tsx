@@ -1,4 +1,4 @@
-import WorkSpace from '@/components/workSpace';
+import { WorkSpace } from '@/components';
 
 export default function Prfile() {
   return (
