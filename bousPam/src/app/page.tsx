@@ -6,12 +6,26 @@ import { BousPam } from '@/utils/svg';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import '@ant-design/v5-patch-for-react-19';
 import { text } from 'stream/consumers';
+import { error } from 'console';
 
 type NotificationType = 'success' | 'info' | 'warning' | 'error';
 
 export default function Auth() {
   const router = useRouter();
   const [api, contextHolder] = notification.useNotification();
+  const [login, setLogin] = useState('');
+  const [password, setPassword] = useState('');
+
+  const logIn = () => {
+    // get login and password
+    if (!login || !password) {
+      openNotificationWithIcon('error');
+      return;
+    }
+
+    // isAuth = true; , isAdmin = true;
+    router.push('/profile');
+  };
 
   const openNotificationWithIcon = (type: NotificationType) => {
     api[type]({
@@ -37,7 +51,11 @@ export default function Auth() {
           <div className="w-[400px] text-[14px] leading-[22px]">
             <div className="mt-[48px]">
               <span className="pb-[8px]">Login</span>
-              <Input style={{ width: '100%', height: 40 }} />
+              <Input
+                style={{ width: '100%', height: 40 }}
+                value={login}
+                onChange={(e) => setLogin(e.target.value)}
+              />
             </div>
             <div className="mt-[24px] flex flex-col">
               <span className="pb-[8px]">Password</span>
@@ -45,7 +63,8 @@ export default function Auth() {
               <Space direction="vertical">
                 <Input.Password
                   style={{ width: '100%', height: 40 }}
-                  placeholder="input password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   iconRender={(visible) =>
                     visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
                   }
@@ -57,11 +76,7 @@ export default function Auth() {
                 <Button
                   type="primary"
                   style={{ width: '100%', height: 40, fontSize: 16 }}
-                  onClick={() => {
-                    openNotificationWithIcon('error');
-
-                    // router.push('/profile');
-                  }}
+                  onClick={() => logIn()}
                 >
                   Login
                 </Button>
