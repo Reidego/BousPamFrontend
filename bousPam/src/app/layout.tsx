@@ -25,7 +25,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const isAuth = false;
+  const isAuth = true;
   return (
     // <StoreProvider>
     <html lang="en">

@@ -4,7 +4,7 @@ interface ListItemProps {
 
 const ListItem: React.FC<ListItemProps> = ({ title }) => {
   return (
-    <span className="self-start h-[54px] w-[205px] flex items-center justify-center pr-[32px] p-[16px] ">
+    <span className="pl-[16px] h-[54px] w-[205px] flex items-center justify-start">
       {title}
     </span>
   );

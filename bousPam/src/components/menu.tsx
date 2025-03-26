@@ -5,6 +5,7 @@ import {
   DesktopOutlined,
   HomeOutlined,
   LogoutOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
@@ -55,7 +56,7 @@ const LeftMenu: React.FC = () => {
     },
     {
       key: '5',
-      icon: <AppstoreOutlined style={{ fontSize: '20px' }} />,
+      icon: <UserOutlined style={{ fontSize: '20px' }} />,
       label: 'Users',
       onClick: () => {
         router.push('/users');
