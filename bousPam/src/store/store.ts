@@ -1,9 +1,14 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { create } from 'zustand';
 
-export const store = configureStore({
-  reducer: {},
-})
+const useStore = create((set) => ({
+  isAuth: false,
+  setAuthTrue: () => set(() => ({ isAuth: true })),
+  setAuthFalse: () => set(() => ({ isAuth: false })),
+  // user: null,
+  // password: null,
 
-export type RootState = ReturnType<typeof store.getState>
-export type AppDispatch = typeof store.dispatch
+  // setUser: (user: string) => set(() => ({ user: user })),
+  // setPassword: (password: string) => set(() => ({ password: password })),
+}));
 
+export default useStore;

@@ -1,9 +1,10 @@
+'use client';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { LeftMenu } from '@/components';
 import './globals.css';
 import '@ant-design/v5-patch-for-react-19';
-import { StoreProvider } from '@/store/StoreProvider';
+import useStore from '@/store/store';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -15,17 +16,17 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
-export const metadata: Metadata = {
-  title: 'Bous Pam',
-  description: 'Bous Pam',
-};
+// export const metadata: Metadata = {
+//   title: 'Bous Pam',
+//   description: 'Bous Pam',
+// };
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const isAuth = false;
+  const { isAuth }: any = useStore();
   return (
     // <StoreProvider>
     <html lang="en">

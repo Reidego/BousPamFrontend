@@ -11,16 +11,22 @@ import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
 import { BousPam, ArrowLeft, ArrowRigth, Terrmianl } from '@/utils/svg';
 import { useRouter } from 'next/navigation';
+import useStore from '@/store/store';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
 const LeftMenu: React.FC = () => {
   const [collapsed, setCollapsed] = useState(true);
   const router = useRouter();
+  const { setAuthFalse }: any = useStore();
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
   };
 
+  const log = () => {
+    setAuthFalse();
+    router.push('/');
+  };
   const items: MenuItem[] = [
     {
       key: '1',
@@ -96,17 +102,19 @@ const LeftMenu: React.FC = () => {
           <div
             className={`p-[24px] text-black text-[16px] flex items-center ${collapsed ? 'justify-center' : ''}`}
           >
-            <LogoutOutlined
-              style={{
-                fontSize: '20px',
-                color: '#000000',
-              }}
-            />
-            <span
-              className={`text-[16px] ${collapsed ? 'hidden' : 'pl-[8px]'}`}
-            >
-              Выход
-            </span>
+            <button onClick={log}>
+              <LogoutOutlined
+                style={{
+                  fontSize: '20px',
+                  color: '#000000',
+                }}
+              />
+              <span
+                className={`text-[16px] ${collapsed ? 'hidden' : 'pl-[8px]'}`}
+              >
+                Выход
+              </span>
+            </button>
           </div>
         </div>
       </div>
