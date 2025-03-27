@@ -75,15 +75,13 @@ export default function Auth() {
               </Space>
             </div>
             <div className="mt-[32px]">
-              <Space>
-                <Button
-                  type="primary"
-                  style={{ width: '100%', height: 40, fontSize: 16 }}
-                  onClick={() => logIn()}
-                >
-                  Login
-                </Button>
-              </Space>
+              <Button
+                type="primary"
+                style={{ width: '100%', height: 40, fontSize: 16 }}
+                onClick={() => logIn()}
+              >
+                Login
+              </Button>
             </div>
           </div>
         </div>
