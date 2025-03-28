@@ -11,20 +11,20 @@ import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
 import { BousPam, ArrowLeft, ArrowRigth, Terrmianl } from '@/utils/svg';
 import { useRouter } from 'next/navigation';
-import useStore from '@/store/store';
+import { useStore } from '@/store/userStore';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
 const LeftMenu: React.FC = () => {
   const [collapsed, setCollapsed] = useState(true);
   const router = useRouter();
-  const { setAuthFalse }: any = useStore();
+  const { setIsAuth }: any = useStore();
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
   };
 
   const log = () => {
-    setAuthFalse();
+    setIsAuth(false);
     router.push('/');
   };
   const items: MenuItem[] = [

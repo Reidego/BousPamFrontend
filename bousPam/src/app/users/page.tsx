@@ -99,7 +99,7 @@ const List: React.FC<ListProps> = ({ filter }) => {
   const filteredItems = useMemo(() => {
     return filter
       ? items.filter((item) =>
-          item.name.toLowerCase().startsWith(filter.toLowerCase())
+          item.surname.toLowerCase().startsWith(filter.toLowerCase())
         )
       : items;
   }, [filter]);
