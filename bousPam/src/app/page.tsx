@@ -7,7 +7,7 @@ import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import '@ant-design/v5-patch-for-react-19';
 import { text } from 'stream/consumers';
 import { error } from 'console';
-import { useStore } from '@/store/userStore';
+import { useUserStore } from '@/store/userStore';
 
 type NotificationType = 'success' | 'info' | 'warning' | 'error';
 
@@ -16,7 +16,7 @@ export default function Auth() {
   const [api, contextHolder] = notification.useNotification();
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
-  const { setIsAuth }: any = useStore();
+  const { setIsAuth }: any = useUserStore();
 
   const logIn = () => {
     // get login and password

@@ -13,7 +13,7 @@ interface CompanyStore {
   addCompany: (terminal: Company) => Promise<Company>;
 }
 
-export const useStore = create<CompanyStore>((set) => ({
+export const useCompamyStore = create<CompanyStore>((set) => ({
   companys: [],
   getCompanys: async () => {
     const companys = await getAllCompanys();

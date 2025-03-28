@@ -14,7 +14,7 @@ interface terminalsStore {
   addTerminal: (terminal: Terminal) => Promise<Terminal>;
 }
 
-export const useStore = create<terminalsStore>((set) => ({
+export const useTerminalStore = create<terminalsStore>((set) => ({
   terminals: [],
   getTerminals: async () => {
     const terminals = await getAllTerminals();

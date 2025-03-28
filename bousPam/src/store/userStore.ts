@@ -14,14 +14,11 @@ interface StoreState {
   isAuth: boolean;
   isAdmin: boolean;
   user: User;
-  // getCompanys: (terminals: Terminal[]) => void;
-  // addCompany: (terminal: Terminal) => Terminal;
-  // getCashears: (terminals: Terminal[]) => void;
-  // addCashear: (terminal: Terminal) => Terminal;
+
   setIsAuth: (auth: boolean) => void;
 }
 
-export const useStore = create<StoreState>((set) => ({
+export const useUserStore = create<StoreState>((set) => ({
   isAuth: false,
   isAdmin: false,
   user: {

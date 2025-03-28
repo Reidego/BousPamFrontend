@@ -4,7 +4,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import { LeftMenu } from '@/components';
 import './globals.css';
 import '@ant-design/v5-patch-for-react-19';
-import useStore from '@/store/userStore';
+import { useUserStore } from '@/store/userStore';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -26,7 +26,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { isAuth }: any = useStore();
+  const { isAuth }: any = useUserStore();
   return (
     // <StoreProvider>
     <html lang="en">
