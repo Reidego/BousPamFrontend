@@ -2,23 +2,31 @@ import { creatNewTerminal, getAllTerminals } from '@/utils/api/terminal';
 import { create } from 'zustand';
 
 interface Terminal {
-  id: number;
-  terminalId: string;
-  fare: string;
-  company: string;
+  id?: number;
+  terminalId?: string;
+  fare: number;
+  company?: string;
+  terminal_id?: string;
+  company_name?: string;
 }
 
 interface terminalsStore {
   terminals: Terminal[];
-  getTerminals: (terminals: Terminal[]) => void;
+  getTerminals: () => void;
   addTerminal: (terminal: Terminal) => Promise<Terminal>;
 }
-
 export const useTerminalStore = create<terminalsStore>((set) => ({
   terminals: [],
   getTerminals: async () => {
     const terminals = await getAllTerminals();
-    set(() => ({ terminals }));
+    set(() => ({
+      terminals: terminals.map((terminal: Terminal) => {
+        return {
+          ...terminal,
+          terminalId: terminal.terminal_id,
+        };
+      }),
+    }));
   },
   addTerminal: async (terminal: Terminal) => {
     const newTerminal = await creatNewTerminal(terminal);

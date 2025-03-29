@@ -1,11 +1,12 @@
 'use client';
 import { HeaderList, ListItem, ListItemID, WorkSpace } from '@/components';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { Input, Pagination, Button, Modal, notification } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import '@ant-design/v5-patch-for-react-19';
-import { create } from 'domain';
-import { clear } from 'console';
+import { useRouter } from 'next/navigation';
+import { useUserStore } from '@/store/userStore';
+import { useCompamyStore } from '@/store/companyStore';
 
 const filds = [
   { id: 1, fildName: '№' },
@@ -13,58 +14,6 @@ const filds = [
   { id: 3, fildName: 'Owner' },
 ];
 
-const items = [
-  {
-    id: 1,
-    name: 'Company 1',
-    owner: 'Owner 1',
-  },
-  {
-    id: 2,
-    name: 'Company 2',
-    owner: 'Owner 2',
-  },
-  {
-    id: 3,
-    name: 'Company 3',
-    owner: 'Owner 3',
-  },
-  {
-    id: 4,
-    name: 'Company 4',
-    owner: 'Owner 4',
-  },
-  {
-    id: 5,
-    name: 'Company 5',
-    owner: 'Owner 5',
-  },
-  {
-    id: 6,
-    name: 'Company 6',
-    owner: 'Owner 6',
-  },
-  {
-    id: 7,
-    name: 'Company 7',
-    owner: 'Owner 7',
-  },
-  {
-    id: 8,
-    name: 'Company 8',
-    owner: 'Owner 8',
-  },
-  {
-    id: 9,
-    name: 'Company 9',
-    owner: 'Owner 9',
-  },
-  {
-    id: 10,
-    name: 'Company 10',
-    owner: 'Owner 10',
-  },
-];
 type NotificationType = 'success' | 'info' | 'warning' | 'error';
 
 interface ListProps {
@@ -72,12 +21,22 @@ interface ListProps {
 }
 
 const List: React.FC<ListProps> = ({ filter }) => {
+  const { isAuth } = useUserStore();
+  const router = useRouter();
+  const { companys, getCompanys } = useCompamyStore();
+
+  useEffect(() => {
+    if (!isAuth) router.push('/');
+  }, [isAuth]);
+
+  getCompanys();
+
   const filteredItems = useMemo(() => {
     return filter
-      ? items.filter((item) =>
+      ? companys.filter((item) =>
           item.name.toLowerCase().startsWith(filter.toLowerCase())
         )
-      : items;
+      : companys;
   }, [filter]);
 
   return (
@@ -91,7 +50,7 @@ const List: React.FC<ListProps> = ({ filter }) => {
           <div className="flex">
             <ListItemID id={index + 1} />
             <ListItem title={item.name} />
-            <ListItem title={item.owner} />
+            <ListItem title={item.owner ?? ''} />
           </div>
           <hr className="text-[#F0F0F0] w-full" />
         </div>
@@ -113,6 +72,7 @@ const suffix = (
 );
 
 export default function Profile() {
+  const { companys, addCompany } = useCompamyStore();
   const [api, contextHolder] = notification.useNotification();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -131,12 +91,16 @@ export default function Profile() {
   };
 
   const createCompany = () => {
+    let [owner_name, owner_surname] = modalFildsOwner.split(' ');
+    if (!owner_surname) owner_surname = owner_name;
     const newCompany = {
-      id: items.length + 1,
       name: modalFildsName,
-      owner: modalFildsOwner,
+      owner_name,
+      owner_surname,
     };
-    items.push(newCompany);
+
+    addCompany(newCompany);
+    // companys.push(newCompany);
 
     openNotificationWithIcon('success');
 
@@ -192,7 +156,7 @@ export default function Profile() {
         <List filter={searchTerm} />
       </div>
       <div className="flex text-[24px] justify-between w-full font-bold">
-        <Pagination defaultCurrent={1} total={items.length} />
+        <Pagination defaultCurrent={1} total={companys.length} />
         <Button type="primary" onClick={showModal}>
           Create new company
         </Button>

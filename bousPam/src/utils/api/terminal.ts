@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = process.env.API_URL;
+const API_URL = process.env.API_URL || 'http://185.65.200.150';
 
 export const getTerminalByCompanyName = async (companyName: string) => {
   try {
@@ -14,7 +14,7 @@ export const getTerminalByCompanyName = async (companyName: string) => {
 
 export const getAllTerminals = async () => {
   try {
-    const response = await axios.get(`${API_URL}/users`);
+    const response = await axios.get(`${API_URL}/terminals/get-list`);
     return response.data;
   } catch (error) {
     console.error('Error fetching all terminals:', error);
@@ -22,9 +22,12 @@ export const getAllTerminals = async () => {
   }
 };
 
-export const creatNewTerminal = async (data: any) => {
+export const creatNewTerminal = async (data: {
+  fare: number;
+  company_name?: string;
+}) => {
   try {
-    const response = await axios.post(`${API_URL}/users`, data);
+    const response = await axios.post(`${API_URL}/terminals/create`, data);
     return response.data;
   } catch (error) {
     console.error('Error fetching create new terminal:', error);

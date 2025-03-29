@@ -1,29 +1,18 @@
 'use client';
 import { HeaderList, ListItem, ListItemID, WorkSpace } from '@/components';
 import { Button, Input, Form, Modal, Pagination, notification } from 'antd';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { SearchOutlined } from '@ant-design/icons';
 import '@ant-design/v5-patch-for-react-19';
-import type { FormProps } from 'antd';
+import { useRouter } from 'next/navigation';
+import { useUserStore } from '@/store/userStore';
+import { useTerminalStore } from '@/store/terminalStore';
 
 const filds = [
   { id: 1, fildName: '№' },
   { id: 2, fildName: 'Terminal id' },
   { id: 3, fildName: 'Fare' },
   { id: 4, fildName: 'Company' },
-];
-
-const items = [
-  { id: 1, terminalId: '1', fare: '100', company: 'Company 1' },
-  { id: 2, terminalId: '2', fare: '200', company: 'Company 2' },
-  { id: 3, terminalId: '3', fare: '300', company: 'Company 3' },
-  { id: 4, terminalId: '4', fare: '400', company: 'Company 4' },
-  { id: 5, terminalId: '5', fare: '500', company: 'Company 5' },
-  { id: 6, terminalId: '6', fare: '600', company: 'Company 6' },
-  { id: 7, terminalId: '7', fare: '700', company: 'Company 7' },
-  { id: 8, terminalId: '8', fare: '800', company: 'Company 8' },
-  { id: 9, terminalId: '9', fare: '900', company: 'Company 9' },
-  { id: 10, terminalId: '10', fare: '1000', company: 'Company 10' },
 ];
 
 type NotificationType = 'success' | 'info' | 'warning' | 'error';
@@ -33,12 +22,20 @@ interface ListProps {
 }
 
 const List: React.FC<ListProps> = ({ filter }) => {
+  const { isAuth } = useUserStore();
+  const router = useRouter();
+  const { terminals } = useTerminalStore();
+
+  useEffect(() => {
+    if (!isAuth) router.push('/');
+  }, [isAuth]);
+
   const filteredItems = useMemo(() => {
     return filter
-      ? items.filter((item) =>
-          item.company.toLowerCase().startsWith(filter.toLowerCase())
+      ? terminals.filter((item) =>
+          item?.company?.toLowerCase().startsWith(filter.toLowerCase())
         )
-      : items;
+      : terminals;
   }, [filter]);
 
   return (
@@ -51,9 +48,9 @@ const List: React.FC<ListProps> = ({ filter }) => {
         >
           <div className="flex">
             <ListItemID id={index + 1} />
-            <ListItem title={item.terminalId} />
-            <ListItem title={item.fare} />
-            <ListItem title={item.company} />
+            <ListItem title={item.terminalId ?? ''} />
+            <ListItem title={`${item.fare}`} />
+            <ListItem title={item.company ?? ''} />
           </div>
           <hr className="text-[#F0F0F0] w-full" />
         </div>
@@ -76,6 +73,7 @@ const suffix = (
 
 export default function Terminals() {
   const [api, contextHolder] = notification.useNotification();
+  const { terminals, addTerminal } = useTerminalStore();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -106,11 +104,6 @@ export default function Terminals() {
     });
   };
 
-  const handleOk = () => {
-    hendleCreate();
-    setIsModalOpen(false);
-  };
-
   const handleCancel = () => {
     setIsModalOpen(false);
   };
@@ -126,8 +119,14 @@ export default function Terminals() {
 
   const hendleCreate = () => {
     console.log('Create', modalFildsName, modalFildsFare);
+    const terminal = {
+      fare: modalFildsFare,
+      company_name: modalFildsName,
+    };
+    addTerminal(terminal);
 
     openNotificationWithIcon('success');
+    setIsModalOpen(false);
 
     clearModalFields();
   };
@@ -150,7 +149,7 @@ export default function Terminals() {
         <List filter={searchTerm} />
       </div>
       <div className="flex text-[24px] justify-between w-full font-bold">
-        <Pagination defaultCurrent={1} total={items.length} />
+        <Pagination defaultCurrent={1} total={terminals.length} />
         <Button type="primary" onClick={showModal}>
           Create new terminal
         </Button>
@@ -168,7 +167,7 @@ export default function Terminals() {
             <Button key="back" onClick={handleCancel}>
               Cancel
             </Button>
-            <Button key="submit" type="primary" onClick={handleOk}>
+            <Button key="submit" type="primary" onClick={hendleCreate}>
               Create
             </Button>
           </div>,
@@ -200,4 +199,7 @@ export default function Terminals() {
       </Modal>
     </WorkSpace>
   );
+}
+function useTerminalsStore(): { cashears: any; getCashears: any } {
+  throw new Error('Function not implemented.');
 }

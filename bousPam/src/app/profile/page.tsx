@@ -1,17 +1,31 @@
+'use client';
+import { useEffect } from 'react';
+import { useUserStore } from '@/store/userStore';
+import { useRouter } from 'next/navigation';
+import { useCashaerStore } from '@/store/cashearStore';
+import { useCompamyStore } from '@/store/companyStore';
+import { useTerminalStore } from '@/store/terminalStore';
+
 export default function Prfile() {
-  const user = {
-    name: 'John Thomas Shelby',
-    phoneNmber: '+7 (922) 333-33-33',
-    gender: 'male',
-    role: 'Admin',
-    birthdey: '13.02.2003',
-  };
+  const { getCashears } = useCashaerStore();
+  const { getCompanys } = useCompamyStore();
+  const { getTerminals } = useTerminalStore();
+  const { user, isAuth } = useUserStore();
+  const router = useRouter();
+
+  getCashears();
+  getCompanys();
+  getTerminals();
 
   const infoFilds = [
     { id: 1, fildName: 'Gender', fildData: user.gender },
     { id: 2, fildName: 'Role', fildData: user.role },
     { id: 3, fildName: 'Date of birth', fildData: user.birthdey },
   ];
+
+  useEffect(() => {
+    if (!isAuth) router.push('/');
+  }, [isAuth]);
 
   return (
     <div className="w-full">

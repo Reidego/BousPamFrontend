@@ -2,14 +2,16 @@ import { creatNewCompany, getAllCompanys } from '@/utils/api/company';
 import { create } from 'zustand';
 
 interface Company {
-  id: number;
+  id?: number;
   name: string;
-  owner: string;
+  owner?: string;
+  owner_name?: string;
+  owner_surname?: string;
 }
 
 interface CompanyStore {
   companys: Company[];
-  getCompanys: (terminals: Company[]) => void;
+  getCompanys: () => void;
   addCompany: (terminal: Company) => Promise<Company>;
 }
 
@@ -20,8 +22,10 @@ export const useCompamyStore = create<CompanyStore>((set) => ({
     set(() => ({ companys }));
   },
   addCompany: async (company: Company) => {
-    const newCompany = await creatNewCompany(company);
-    set((state) => ({ companys: [...state.companys, newCompany] }));
-    return newCompany;
+    if (company.owner_name && company.owner_surname) {
+      const newCompany = await creatNewCompany(company);
+      set((state) => ({ companys: [...state.companys, newCompany] }));
+      return newCompany;
+    }
   },
 }));

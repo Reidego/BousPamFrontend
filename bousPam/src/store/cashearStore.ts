@@ -1,29 +1,31 @@
-import { creatNewCompany, getAllCompanys } from '@/utils/api/company';
+import { creatNewCashier, getAllCashiers } from '@/utils/api/users';
 import { create } from 'zustand';
 
 interface Cashear {
-  id: number;
+  id?: number;
   name: string;
   surname: string;
   login: string;
+  password: string;
+  phone_number: string;
   gender: string;
   date_of_birth: string;
 }
 
 interface CashearStore {
   cashears: Cashear[];
-  getCashears: (cashears: Cashear[]) => void;
+  getCashears: () => void;
   addCashear: (cashear: Cashear) => Promise<Cashear>;
 }
 
 export const useCashaerStore = create<CashearStore>((set) => ({
   cashears: [],
   getCashears: async () => {
-    const cashears = await getAllCompanys();
+    const cashears = await getAllCashiers();
     set(() => ({ cashears }));
   },
   addCashear: async (cashear: Cashear) => {
-    const newCashear = await creatNewCompany(cashear);
+    const newCashear = await creatNewCashier(cashear);
     set((state) => ({ cashears: [...state.cashears, newCashear] }));
     return newCashear;
   },

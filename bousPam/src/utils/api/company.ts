@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = process.env.API_URL;
+const API_URL = process.env.API_URL || 'http://185.65.200.150';
 
 export const getCompanyByCompanyName = async (companyName: string) => {
   try {
@@ -14,7 +14,7 @@ export const getCompanyByCompanyName = async (companyName: string) => {
 
 export const getAllCompanys = async () => {
   try {
-    const response = await axios.get(`${API_URL}/users`);
+    const response = await axios.get(`${API_URL}/company/get-list`);
     return response.data;
   } catch (error) {
     console.error('Error fetching all companys:', error);
@@ -22,9 +22,13 @@ export const getAllCompanys = async () => {
   }
 };
 
-export const creatNewCompany = async (data: any) => {
+export const creatNewCompany = async (data: {
+  name: string;
+  owner_name?: string;
+  owner_surname?: string;
+}) => {
   try {
-    const response = await axios.post(`${API_URL}/users`, data);
+    const response = await axios.post(`${API_URL}/company/create`, data);
     return response.data;
   } catch (error) {
     console.error('Error fetching creat new company:', error);

@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import getUserByLogin from '../utils/api/login';
-import { getAllTerminals, creatNewTerminal } from '@/utils/api/terminal';
 
 interface User {
   name: string;
@@ -32,10 +31,18 @@ export const useUserStore = create<StoreState>((set) => ({
     const user = await getUserByLogin({ login, password });
     if (user?.name) {
       if (user?.role === 'admin') {
-        set(() => ({ isAuth: true }));
+        set(() => ({ isAdmin: true }));
       }
       set(() => ({ isAuth: true }));
-      set(() => ({ user: JSON.parse(user) }));
+      set(() => ({
+        user: {
+          name: `${user.name} ${user.surname}`,
+          phoneNmber: user.phone_number,
+          gender: user.gender,
+          role: user.role,
+          birthdey: user.date_of_birth,
+        },
+      }));
     }
   },
   setIsAuth: (auth: boolean) => set(() => ({ isAuth: auth })),

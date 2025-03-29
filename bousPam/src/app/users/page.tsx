@@ -1,9 +1,12 @@
 'use client';
 import { HeaderList, ListItem, ListItemID, WorkSpace } from '@/components';
 import { Button, Input, Modal, Pagination, Space, notification } from 'antd';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { SearchOutlined } from '@ant-design/icons';
 import '@ant-design/v5-patch-for-react-19';
+import { useRouter } from 'next/navigation';
+import { useUserStore } from '@/store/userStore';
+import { useCashaerStore } from '@/store/cashearStore';
 
 const filds = [
   { id: 1, fildName: '№' },
@@ -14,81 +17,6 @@ const filds = [
   { id: 6, fildName: 'date_of_birth' },
 ];
 
-const items = [
-  {
-    id: 1,
-    name: 'Name 1',
-    surname: 'Surname 1',
-    login: 'login',
-    gender: 'gender',
-    date_of_birth: 'date_of_birth',
-  },
-  {
-    id: 2,
-    name: 'Name 2',
-    surname: 'Surname 2',
-    login: 'login',
-    gender: 'gender',
-    date_of_birth: 'date_of_birth',
-  },
-  {
-    id: 3,
-    name: 'Name 3',
-    surname: 'Surname 3',
-    login: 'login',
-    gender: 'gender',
-    date_of_birth: 'date_of_birth',
-  },
-  {
-    id: 4,
-    name: 'Name 4',
-    surname: 'Surname 4',
-    login: 'login',
-    gender: 'gender',
-    date_of_birth: 'date_of_birth',
-  },
-  {
-    id: 5,
-    name: 'Name 5',
-    surname: 'Surname 5',
-    login: 'login',
-    gender: 'gender',
-    date_of_birth: 'date_of_birth',
-  },
-  {
-    id: 6,
-    name: 'Name 6',
-    surname: 'Surname 6',
-    login: 'login',
-    gender: 'gender',
-    date_of_birth: 'date_of_birth',
-  },
-  {
-    id: 7,
-    name: 'Name 7',
-    surname: 'Surname 7',
-    login: 'login',
-    gender: 'gender',
-    date_of_birth: 'date_of_birth',
-  },
-  {
-    id: 8,
-    name: 'Name 8',
-    surname: 'Surname 8',
-    login: 'login',
-    gender: 'gender',
-    date_of_birth: 'date_of_birth',
-  },
-  {
-    id: 9,
-    name: 'Name 9',
-    surname: 'Surname 9',
-    login: 'login',
-    gender: 'gender',
-    date_of_birth: 'date_of_birth',
-  },
-];
-
 type NotificationType = 'success' | 'info' | 'warning' | 'error';
 
 interface ListProps {
@@ -96,12 +24,20 @@ interface ListProps {
 }
 
 const List: React.FC<ListProps> = ({ filter }) => {
+  const { isAuth } = useUserStore();
+  const router = useRouter();
+  const { cashears, getCashears } = useCashaerStore();
+  getCashears();
+  useEffect(() => {
+    if (!isAuth) router.push('/');
+  }, [isAuth]);
+
   const filteredItems = useMemo(() => {
     return filter
-      ? items.filter((item) =>
+      ? cashears.filter((item) =>
           item.surname.toLowerCase().startsWith(filter.toLowerCase())
         )
-      : items;
+      : cashears;
   }, [filter]);
 
   return (
@@ -141,6 +77,8 @@ const suffix = (
 
 export default function Users() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { cashears, addCashear, getCashears } = useCashaerStore();
+
   const [searchTerm, setSearchTerm] = useState('');
 
   const [name, setName] = useState('');
@@ -148,6 +86,9 @@ export default function Users() {
   const [role, setRole] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [phoneNmber, setPhoneNmber] = useState('');
+  const [dateOfBirth, setDateOfBirth] = useState('');
+  const [login, setLogin] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
 
   const showModal = () => {
@@ -175,19 +116,32 @@ export default function Users() {
     });
   };
 
-  const handleOk = () => {
-    hendleCreate();
-    setIsModalOpen(false);
-  };
-
   const hendleCreate = () => {
-    console.log('name', name);
-    console.log('surame', surname);
-    console.log('role', role);
-    console.log('email', email);
-    console.log('password', password);
-    console.log('passwordConfirmation', passwordConfirmation);
+    // console.log('name', name);
+    // console.log('surame', surname);
+    // console.log('role', role);
+    // console.log('email', email);
+    // console.log('password', password);
+    // console.log('passwordConfirmation', passwordConfirmation);
+
+    if (password !== passwordConfirmation) {
+      openNotificationWithIcon('error');
+      return;
+    }
+    const data = {
+      name,
+      surname,
+      password,
+      role,
+      login,
+      gender: 'men',
+      date_of_birth: dateOfBirth,
+      phone_number: phoneNmber,
+    };
+    addCashear(data);
     openNotificationWithIcon('success');
+    getCashears();
+    setIsModalOpen(false);
 
     clearModalFilds();
   };
@@ -227,7 +181,7 @@ export default function Users() {
         <List filter={searchTerm} />
       </div>
       <div className="flex text-[24px] justify-between w-full font-bold">
-        <Pagination defaultCurrent={1} total={items.length} />
+        <Pagination defaultCurrent={1} total={cashears.length} />
         <Button type="primary" onClick={showModal}>
           Create new cashier
         </Button>
@@ -245,7 +199,7 @@ export default function Users() {
             <Button key="back" onClick={handleCancel}>
               Cancel
             </Button>
-            <Button key="submit" type="primary" onClick={handleOk}>
+            <Button key="submit" type="primary" onClick={hendleCreate}>
               Create
             </Button>
           </div>,
@@ -285,6 +239,30 @@ export default function Users() {
             />
           </div>
           <div key={5} className="flex flex-col gap-y-[2px]">
+            <span className="text-[#007AFF] text-[16px]">Login</span>
+            <Input
+              id="login"
+              value={login}
+              onChange={(e) => setLogin(e.target.value)}
+            />
+          </div>
+          <div key={6} className="flex flex-col gap-y-[2px]">
+            <span className="text-[#007AFF] text-[16px]">Phone number</span>
+            <Input
+              id="phoneNmber"
+              value={phoneNmber}
+              onChange={(e) => setPhoneNmber(e.target.value)}
+            />
+          </div>
+          <div key={7} className="flex flex-col gap-y-[2px]">
+            <span className="text-[#007AFF] text-[16px]">date of birth</span>
+            <Input
+              id="dateOfBirth"
+              value={dateOfBirth}
+              onChange={(e) => setDateOfBirth(e.target.value)}
+            />
+          </div>
+          <div key={8} className="flex flex-col gap-y-[2px]">
             <span className="text-[#007AFF] text-[16px]">Password</span>
             <Space direction="vertical">
               <Input.Password
@@ -294,7 +272,7 @@ export default function Users() {
               />
             </Space>
           </div>
-          <div key={6} className="flex flex-col gap-y-[2px]">
+          <div key={9} className="flex flex-col gap-y-[2px]">
             <span className="text-[#007AFF] text-[16px]">
               Password confirmation
             </span>
