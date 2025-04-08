@@ -26,9 +26,9 @@ const List: React.FC<ListProps> = ({ filter }) => {
   const router = useRouter();
   const { terminals } = useTerminalStore();
 
-  useEffect(() => {
-    if (!isAuth) router.push('/');
-  }, [isAuth]);
+  // useEffect(() => {
+  //   if (!isAuth) router.push('/');
+  // }, []);
 
   const filteredItems = useMemo(() => {
     return filter

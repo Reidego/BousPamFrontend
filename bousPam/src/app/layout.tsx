@@ -5,7 +5,7 @@ import './globals.css';
 import '@ant-design/v5-patch-for-react-19';
 import { useUserStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { use } from 'react';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -29,7 +29,6 @@ export default function RootLayout({
 }>) {
   const { isAuth }: any = useUserStore();
   return (
-    // <StoreProvider>
     <html lang="en">
       <body
         className={`text-black ${geistSans.variable} ${geistMono.variable} antialiased flex`}
@@ -38,6 +37,5 @@ export default function RootLayout({
         {children}
       </body>
     </html>
-    // </StoreProvider>
   );
 }

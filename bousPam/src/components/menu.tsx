@@ -12,63 +12,72 @@ import { Menu } from 'antd';
 import { BousPam, ArrowLeft, ArrowRigth, Terrmianl } from '@/utils/svg';
 import { useRouter } from 'next/navigation';
 import { useUserStore } from '@/store/userStore';
+import { useCashaerStore } from '@/store/cashearStore';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
 const LeftMenu: React.FC = () => {
   const [collapsed, setCollapsed] = useState(true);
   const router = useRouter();
-  const { setIsAuth }: any = useUserStore();
+  const { isAdmin, setIsAuth } = useUserStore();
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
   };
+  const { getCashears } = useCashaerStore();
 
-  const log = () => {
-    setIsAuth(false);
-    router.push('/');
-  };
-  const items: MenuItem[] = [
-    {
-      key: '1',
-      icon: <HomeOutlined style={{ fontSize: '20px' }} />,
-      label: 'Profile',
-      onClick: () => {
-        router.push('/profile');
-      },
-    },
-    {
-      key: '2',
-      icon: <DesktopOutlined style={{ fontSize: '20px' }} />,
-      label: 'Transport companies',
-      onClick: () => {
-        router.push('/transportCompanies');
-      },
-    },
-    // {
-    //   key: '3',
-    //   icon: <ContainerOutlined style={{ fontSize: '20px' }} />,
-    //   label: 'Option 3',
-    //   onClick: () => {
-    //     router.push('/profile');
-    //   },
-    // },
-    {
-      key: '4',
-      icon: <Terrmianl />,
-      label: 'Terminals',
-      onClick: () => {
-        router.push('/terminals');
-      },
-    },
-    {
-      key: '5',
-      icon: <UserOutlined style={{ fontSize: '20px' }} />,
-      label: 'Users',
-      onClick: () => {
-        router.push('/users');
-      },
-    },
-  ];
+  const items: MenuItem[] = !isAdmin
+    ? [
+        {
+          key: 1,
+          icon: <HomeOutlined style={{ fontSize: '20px' }} />,
+          label: 'Profile',
+          onClick: () => {
+            router.push('/profile');
+          },
+        },
+        {
+          key: 2,
+          icon: <UserOutlined style={{ fontSize: '20px' }} />,
+          label: 'Users',
+          onClick: () => {
+            router.push('/passengers');
+          },
+        },
+      ]
+    : [
+        {
+          key: 1,
+          icon: <HomeOutlined style={{ fontSize: '20px' }} />,
+          label: 'Profile',
+          onClick: () => {
+            router.push('/profile');
+          },
+        },
+        {
+          key: 2,
+          icon: <DesktopOutlined style={{ fontSize: '20px' }} />,
+          label: 'Transport companies',
+          onClick: () => {
+            router.push('/transportCompanies');
+          },
+        },
+        {
+          key: 4,
+          icon: <Terrmianl />,
+          label: 'Terminals',
+          onClick: () => {
+            router.push('/terminals');
+          },
+        },
+        {
+          key: 5,
+          icon: <UserOutlined style={{ fontSize: '20px' }} />,
+          label: 'Users',
+          onClick: () => {
+            router.push('/cashiers');
+          },
+        },
+      ];
 
   return (
     <div
@@ -102,7 +111,14 @@ const LeftMenu: React.FC = () => {
           <div
             className={`p-[24px] text-black text-[16px] flex items-center ${collapsed ? 'justify-center' : ''}`}
           >
-            <button onClick={log}>
+            <button
+              onClick={() => {
+                {
+                  setIsAuth(false);
+                  router.push('/');
+                }
+              }}
+            >
               <LogoutOutlined
                 style={{
                   fontSize: '20px',

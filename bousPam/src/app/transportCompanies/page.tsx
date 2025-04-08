@@ -25,9 +25,9 @@ const List: React.FC<ListProps> = ({ filter }) => {
   const router = useRouter();
   const { companys, getCompanys } = useCompamyStore();
 
-  useEffect(() => {
-    if (!isAuth) router.push('/');
-  }, [isAuth]);
+  // useEffect(() => {
+  //   if (!isAuth) router.push('/');
+  // }, []);
 
   getCompanys();
 

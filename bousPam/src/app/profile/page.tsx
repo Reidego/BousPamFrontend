@@ -13,10 +13,6 @@ export default function Prfile() {
   const { user, isAuth } = useUserStore();
   const router = useRouter();
 
-  getCashears();
-  getCompanys();
-  getTerminals();
-
   const infoFilds = [
     { id: 1, fildName: 'Gender', fildData: user.gender },
     { id: 2, fildName: 'Role', fildData: user.role },
@@ -24,8 +20,15 @@ export default function Prfile() {
   ];
 
   useEffect(() => {
-    if (!isAuth) router.push('/');
+    if (!isAuth) {
+      router.push('/');
+    }
+    getCashears();
+    getCompanys();
+    getTerminals();
   }, [isAuth]);
+
+  console.log(user);
 
   return (
     <div className="w-full">

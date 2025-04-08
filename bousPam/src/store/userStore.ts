@@ -18,7 +18,7 @@ interface StoreState {
 }
 
 export const useUserStore = create<StoreState>((set) => ({
-  isAuth: false,
+  isAuth: true,
   isAdmin: false,
   user: {
     name: '',

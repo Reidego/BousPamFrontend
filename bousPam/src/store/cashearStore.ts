@@ -14,7 +14,7 @@ interface Cashear {
 
 interface CashearStore {
   cashears: Cashear[];
-  getCashears: () => void;
+  getCashears: () => Promise<Cashear[]>;
   addCashear: (cashear: Cashear) => Promise<Cashear>;
 }
 
@@ -23,6 +23,7 @@ export const useCashaerStore = create<CashearStore>((set) => ({
   getCashears: async () => {
     const cashears = await getAllCashiers();
     set(() => ({ cashears }));
+    return cashears;
   },
   addCashear: async (cashear: Cashear) => {
     const newCashear = await creatNewCashier(cashear);

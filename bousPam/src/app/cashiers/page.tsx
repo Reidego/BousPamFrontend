@@ -19,18 +19,30 @@ const filds = [
 
 type NotificationType = 'success' | 'info' | 'warning' | 'error';
 
+interface Cashear {
+  id?: number;
+  name: string;
+  surname: string;
+  login: string;
+  password: string;
+  phone_number: string;
+  gender: string;
+  date_of_birth: string;
+}
+
 interface ListProps {
   filter: string;
 }
 
 const List: React.FC<ListProps> = ({ filter }) => {
   const { isAuth } = useUserStore();
+  const { cashears } = useCashaerStore();
+  // const [cashears] = useState<Cashear[]>([]);
   const router = useRouter();
-  const { cashears, getCashears } = useCashaerStore();
-  getCashears();
+
   useEffect(() => {
     if (!isAuth) router.push('/');
-  }, [isAuth]);
+  }, []);
 
   const filteredItems = useMemo(() => {
     return filter
@@ -48,7 +60,7 @@ const List: React.FC<ListProps> = ({ filter }) => {
           key={item.id}
           className="bg-white h-[54px] text-black flex flex-col items-start justify-start"
         >
-          <div className="flex">
+          <div key={item.id || index} className="flex">
             <ListItemID id={index + 1} />
             <ListItem title={item.name} />
             <ListItem title={item.surname} />
@@ -207,7 +219,9 @@ export default function Users() {
       >
         <form>
           <div key={1} className="flex flex-col gap-y-[2px]">
-            <span className="text-[#007AFF]">Name</span>
+            <span key={1} className="text-[#007AFF]">
+              Name
+            </span>
             <Input
               id="name"
               value={name}
@@ -215,7 +229,9 @@ export default function Users() {
             />
           </div>
           <div key={2} className="flex flex-col gap-y-[2px]">
-            <span className="text-[#007AFF] text-[16px]">Surname</span>
+            <span key={2} className="text-[#007AFF] text-[16px]">
+              Surname
+            </span>
             <Input
               id="surname"
               value={surname}
@@ -223,7 +239,9 @@ export default function Users() {
             />
           </div>
           <div key={3} className="flex flex-col gap-y-[2px]">
-            <span className="text-[#007AFF] text-[16px]">Role</span>
+            <span key={3} className="text-[#007AFF] text-[16px]">
+              Role
+            </span>
             <Input
               id="role"
               value={role}
@@ -231,7 +249,9 @@ export default function Users() {
             />
           </div>
           <div key={4} className="flex flex-col gap-y-[2px]">
-            <span className="text-[#007AFF] text-[16px]">Email</span>
+            <span key={4} className="text-[#007AFF] text-[16px]">
+              Email
+            </span>
             <Input
               id="email"
               value={email}
@@ -239,7 +259,9 @@ export default function Users() {
             />
           </div>
           <div key={5} className="flex flex-col gap-y-[2px]">
-            <span className="text-[#007AFF] text-[16px]">Login</span>
+            <span key={5} className="text-[#007AFF] text-[16px]">
+              Login
+            </span>
             <Input
               id="login"
               value={login}
@@ -247,7 +269,9 @@ export default function Users() {
             />
           </div>
           <div key={6} className="flex flex-col gap-y-[2px]">
-            <span className="text-[#007AFF] text-[16px]">Phone number</span>
+            <span key={6} className="text-[#007AFF] text-[16px]">
+              Phone number
+            </span>
             <Input
               id="phoneNmber"
               value={phoneNmber}
@@ -255,7 +279,9 @@ export default function Users() {
             />
           </div>
           <div key={7} className="flex flex-col gap-y-[2px]">
-            <span className="text-[#007AFF] text-[16px]">date of birth</span>
+            <span key={7} className="text-[#007AFF] text-[16px]">
+              date of birth
+            </span>
             <Input
               id="dateOfBirth"
               value={dateOfBirth}
@@ -263,7 +289,9 @@ export default function Users() {
             />
           </div>
           <div key={8} className="flex flex-col gap-y-[2px]">
-            <span className="text-[#007AFF] text-[16px]">Password</span>
+            <span key={8} className="text-[#007AFF] text-[16px]">
+              Password
+            </span>
             <Space direction="vertical">
               <Input.Password
                 id="password"
@@ -273,7 +301,7 @@ export default function Users() {
             </Space>
           </div>
           <div key={9} className="flex flex-col gap-y-[2px]">
-            <span className="text-[#007AFF] text-[16px]">
+            <span key={9} className="text-[#007AFF] text-[16px]">
               Password confirmation
             </span>
             <Space direction="vertical">
