@@ -1,25 +1,23 @@
 import { create } from 'zustand';
 import getUserByLogin from '../utils/api/login';
 
-interface User {
-  name: string;
-  phoneNmber: string;
-  gender: string;
-  role: string;
-  birthdey: string;
-}
-
 interface StoreState {
   isAuth: boolean;
-  isAdmin: boolean;
-  user: User;
+  role: string;
+  user: {
+    name: string;
+    phoneNmber: string;
+    gender: string;
+    role: string;
+    birthdey: string;
+  };
 
   setIsAuth: (auth: boolean) => void;
 }
 
 export const useUserStore = create<StoreState>((set) => ({
   isAuth: true,
-  isAdmin: false,
+  role: 'company',
   user: {
     name: '',
     phoneNmber: '',
@@ -30,8 +28,8 @@ export const useUserStore = create<StoreState>((set) => ({
   getUser: async (login: string, password: string) => {
     const user = await getUserByLogin({ login, password });
     if (user?.name) {
-      if (user?.role === 'admin') {
-        set(() => ({ isAdmin: true }));
+      if (user?.role) {
+        set(() => ({ role: user.role }));
       }
       set(() => ({ isAuth: true }));
       set(() => ({

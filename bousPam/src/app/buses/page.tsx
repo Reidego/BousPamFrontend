@@ -8,23 +8,30 @@ import { useRouter } from 'next/navigation';
 import { useUserStore } from '@/store/userStore';
 import { useTerminalStore } from '@/store/terminalStore';
 
-const filds = [
-  { id: 1, fildName: '№' },
-  { id: 2, fildName: 'Terminal id' },
-  { id: 3, fildName: 'Fare' },
-  { id: 4, fildName: 'Company' },
-];
-
 type NotificationType = 'success' | 'info' | 'warning' | 'error';
 
 interface ListProps {
   filter: string;
 }
 
+const filds = [
+  { id: 1, fildName: '№' },
+  { id: 2, fildName: 'Terminal id' },
+  { id: 3, fildName: 'Route' },
+  { id: 4, fildName: 'Number' },
+];
+
+const buses = [
+  { id: 1, terminalId: '123', route: 'A-B', number: 'AB123' },
+  { id: 2, terminalId: '456', route: 'B-C', number: 'BC456' },
+  { id: 3, terminalId: '789', route: 'C-D', number: 'CD789' },
+  { id: 4, terminalId: '101', route: 'D-E', number: 'DE101' },
+];
+
 const List: React.FC<ListProps> = ({ filter }) => {
   const { isAuth } = useUserStore();
   const router = useRouter();
-  const { terminals } = useTerminalStore();
+  //   const { terminals } = useTerminalStore();
 
   // useEffect(() => {
   //   if (!isAuth) router.push('/');
@@ -32,10 +39,10 @@ const List: React.FC<ListProps> = ({ filter }) => {
 
   const filteredItems = useMemo(() => {
     return filter
-      ? terminals.filter((item) =>
-          item?.company?.toLowerCase().startsWith(filter.toLowerCase())
+      ? buses.filter((item) =>
+          item?.number?.toLowerCase().startsWith(filter.toLowerCase())
         )
-      : terminals;
+      : buses;
   }, [filter]);
 
   return (
@@ -43,14 +50,14 @@ const List: React.FC<ListProps> = ({ filter }) => {
       <HeaderList filds={filds} />
       {filteredItems.map((item, index) => (
         <div
-          key={item.terminalId}
+          key={item.id}
           className="bg-white h-[54px] text-black flex flex-col items-start justify-start"
         >
           <div className="flex">
             <ListItemID id={index + 1} />
             <ListItem title={item.terminalId ?? ''} />
-            <ListItem title={`${item.fare}`} />
-            <ListItem title={item.company ?? ''} />
+            <ListItem title={item.route ?? ''} />
+            <ListItem title={item.number ?? ''} />
           </div>
           <hr className="text-[#F0F0F0] w-full" />
         </div>
@@ -79,8 +86,11 @@ export default function Terminals() {
 
   const [searchTerm, setSearchTerm] = useState('');
 
-  const [modalFildsName, setModalFildsName] = useState('');
-  const [modalFildsFare, setModalFildsFare] = useState(NaN);
+  const [newBus, setNewBus] = useState({
+    terminalId: '',
+    route: '',
+    number: '',
+  });
 
   const hash = 'asadasd9asdudu89asud8998sad89sad9';
 
@@ -94,8 +104,9 @@ export default function Terminals() {
       message: 'Terminal created',
       description: (
         <div className="flex flex-col">
-          <span>Terminal hash:</span>
-          <span>{hash}</span>
+          <span>{`Terminal ID: ${newBus.terminalId}`}</span>
+          <span>{`Route: ${newBus.route}`}</span>
+          <span>{`Bus number: ${newBus.number}`}</span>
         </div>
       ),
       showProgress: true,
@@ -113,17 +124,30 @@ export default function Terminals() {
   };
 
   const clearModalFields = () => {
-    setModalFildsName('');
-    setModalFildsFare(NaN);
+    setNewBus({
+      terminalId: '',
+      route: '',
+      number: '',
+    });
   };
 
   const hendleCreate = () => {
-    console.log('Create', modalFildsName, modalFildsFare);
-    const terminal = {
-      fare: modalFildsFare,
-      company_name: modalFildsName,
-    };
-    addTerminal(terminal);
+    if (!newBus.terminalId || !newBus.route || !newBus.number) {
+      openNotificationWithIcon('error');
+      return;
+    }
+
+    buses.push({
+      id: buses.length + 1,
+      terminalId: newBus.terminalId,
+      route: newBus.route,
+      number: newBus.number,
+    });
+    // const terminal = {
+    //   fare: modalFildsFare,
+    //   company_name: modalFildsName,
+    // };
+    // addTerminal(terminal);
 
     openNotificationWithIcon('success');
     setIsModalOpen(false);
@@ -135,10 +159,10 @@ export default function Terminals() {
     <WorkSpace>
       {contextHolder}
       <div className="flex text-[24px] justify-between  w-full font-bold">
-        <span className="text-[24px] flex-nowrap">List of terminals</span>
+        <span className="text-[24px] flex-nowrap">List of buses</span>
         <div className="flex w-[577px]">
           <Input
-            placeholder="Search by company name"
+            placeholder="Search by bus number"
             size="large"
             suffix={suffix}
             onChange={(e) => handleSearch(e.target.value)}
@@ -149,18 +173,19 @@ export default function Terminals() {
         <List filter={searchTerm} />
       </div>
       <div className="flex text-[24px] justify-between w-full font-bold">
-        <Pagination defaultCurrent={1} total={terminals.length} />
+        <Pagination defaultCurrent={1} total={buses.length} />
         <Button type="primary" onClick={showModal}>
-          Create new terminal
+          Create new bus
         </Button>
       </div>
       <Modal
         title={
           <span className="w-full flex items-center justify-center font-medium">
-            Create new terminal
+            Create new bus
           </span>
         }
         centered
+        onCancel={handleCancel}
         open={isModalOpen}
         footer={[
           <div className="w-full flex justify-between mt-[30px]">
@@ -175,31 +200,33 @@ export default function Terminals() {
       >
         <form>
           <div className="flex flex-col gap-y-[2px]">
-            <span className="text-[#007AFF]">Company name</span>
+            <span className="text-[#007AFF]">Terminal Id</span>
             <Input
               id="companyName"
-              value={modalFildsName}
-              onChange={(e) => setModalFildsName(e.target.value)}
+              value={newBus.terminalId}
+              onChange={(e) =>
+                setNewBus({ ...newBus, terminalId: e.target.value })
+              }
             />
           </div>
           <div className="flex flex-col gap-y-[2px]">
-            <span className="text-[#007AFF] text-[16px]">Fare</span>
+            <span className="text-[#007AFF]">Bus number</span>
             <Input
-              id="fare"
-              value={isNaN(modalFildsFare) ? '' : modalFildsFare}
-              onChange={(e) => {
-                const value = e.target.value;
-                if (!isNaN(Number(value))) {
-                  setModalFildsFare(Number(value));
-                }
-              }}
+              id="companyName"
+              value={newBus.number}
+              onChange={(e) => setNewBus({ ...newBus, number: e.target.value })}
+            />
+          </div>
+          <div className="flex flex-col gap-y-[2px]">
+            <span className="text-[#007AFF]">Route</span>
+            <Input
+              id="companyName"
+              value={newBus.route}
+              onChange={(e) => setNewBus({ ...newBus, route: e.target.value })}
             />
           </div>
         </form>
       </Modal>
     </WorkSpace>
   );
-}
-function useTerminalsStore(): { cashears: any; getCashears: any } {
-  throw new Error('Function not implemented.');
 }

@@ -2,14 +2,22 @@
 import React, { useState } from 'react';
 import {
   AppstoreOutlined,
+  CarOutlined,
   DesktopOutlined,
+  EnvironmentOutlined,
   HomeOutlined,
   LogoutOutlined,
   UserOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
-import { BousPam, ArrowLeft, ArrowRigth, Terrmianl } from '@/utils/svg';
+import {
+  BousPam,
+  ArrowLeft,
+  ArrowRigth,
+  Terrmianl,
+  RouteItem,
+} from '@/utils/svg';
 import { useRouter } from 'next/navigation';
 import { useUserStore } from '@/store/userStore';
 import { useCashaerStore } from '@/store/cashearStore';
@@ -19,65 +27,114 @@ type MenuItem = Required<MenuProps>['items'][number];
 const LeftMenu: React.FC = () => {
   const [collapsed, setCollapsed] = useState(true);
   const router = useRouter();
-  const { isAdmin, setIsAuth } = useUserStore();
+  const { role, setIsAuth } = useUserStore();
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
   };
-  const { getCashears } = useCashaerStore();
 
-  const items: MenuItem[] = !isAdmin
-    ? [
-        {
-          key: 1,
-          icon: <HomeOutlined style={{ fontSize: '20px' }} />,
-          label: 'Profile',
-          onClick: () => {
-            router.push('/profile');
+  const items: MenuItem[] = (() => {
+    switch (role) {
+      case 'admin':
+        return [
+          {
+            key: 1,
+            icon: <HomeOutlined style={{ fontSize: '20px' }} />,
+            label: 'Profile',
+            onClick: () => {
+              router.push('/profile');
+            },
           },
-        },
-        {
-          key: 2,
-          icon: <UserOutlined style={{ fontSize: '20px' }} />,
-          label: 'Users',
-          onClick: () => {
-            router.push('/passengers');
+          {
+            key: 2,
+            icon: <DesktopOutlined style={{ fontSize: '20px' }} />,
+            label: 'Transport companies',
+            onClick: () => {
+              router.push('/transportCompanies');
+            },
           },
-        },
-      ]
-    : [
-        {
-          key: 1,
-          icon: <HomeOutlined style={{ fontSize: '20px' }} />,
-          label: 'Profile',
-          onClick: () => {
-            router.push('/profile');
+          {
+            key: 4,
+            icon: <Terrmianl />,
+            label: 'Terminals',
+            onClick: () => {
+              router.push('/terminals');
+            },
           },
-        },
-        {
-          key: 2,
-          icon: <DesktopOutlined style={{ fontSize: '20px' }} />,
-          label: 'Transport companies',
-          onClick: () => {
-            router.push('/transportCompanies');
+          {
+            key: 5,
+            icon: <UserOutlined style={{ fontSize: '20px' }} />,
+            label: 'Users',
+            onClick: () => {
+              router.push('/cashiers');
+            },
           },
-        },
-        {
-          key: 4,
-          icon: <Terrmianl />,
-          label: 'Terminals',
-          onClick: () => {
-            router.push('/terminals');
+        ];
+      case 'company':
+        return [
+          {
+            key: 1,
+            icon: <HomeOutlined style={{ fontSize: '20px' }} />,
+            label: 'Profile',
+            onClick: () => {
+              router.push('/profile');
+            },
           },
-        },
-        {
-          key: 5,
-          icon: <UserOutlined style={{ fontSize: '20px' }} />,
-          label: 'Users',
-          onClick: () => {
-            router.push('/cashiers');
+          {
+            key: 2,
+            icon: <DesktopOutlined style={{ fontSize: '20px' }} />,
+            label: 'Drivers',
+            onClick: () => {
+              router.push('/drivers');
+            },
           },
-        },
-      ];
+          {
+            key: 4,
+            icon: <Terrmianl />,
+            label: 'Terminals',
+            onClick: () => {
+              router.push('/terminals');
+            },
+          },
+          {
+            key: 5,
+            icon: <CarOutlined style={{ fontSize: '20px' }} />,
+            label: 'Buses',
+            onClick: () => {
+              router.push('/buses');
+            },
+          },
+          {
+            key: 6,
+            icon: <EnvironmentOutlined style={{ fontSize: '20px' }} />,
+            label: 'Routes',
+            onClick: () => {
+              router.push('/listRoutes');
+            },
+          },
+        ];
+      case 'cashier':
+        return [
+          {
+            key: 1,
+            icon: <HomeOutlined style={{ fontSize: '20px' }} />,
+            label: 'Profile',
+            onClick: () => {
+              router.push('/profile');
+            },
+          },
+          {
+            key: 2,
+            icon: <UserOutlined style={{ fontSize: '20px' }} />,
+            label: 'Users',
+            onClick: () => {
+              router.push('/passengers');
+            },
+          },
+        ];
+      default:
+        return [];
+    }
+  })();
 
   return (
     <div

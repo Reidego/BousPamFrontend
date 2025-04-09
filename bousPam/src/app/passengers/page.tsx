@@ -160,7 +160,7 @@ export default function Passengers() {
       <div className="flex text-[24px] justify-between w-full font-bold">
         <Pagination defaultCurrent={1} total={cashears.length} />
         <Button type="primary" onClick={showModal}>
-          Create new cashier
+          Create new passenger
         </Button>
       </div>
       <Modal
