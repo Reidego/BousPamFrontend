@@ -17,7 +17,7 @@ interface StoreState {
 
 export const useUserStore = create<StoreState>((set) => ({
   isAuth: true,
-  role: 'company',
+  role: 'cashier',
   user: {
     name: '',
     phoneNmber: '',

@@ -145,7 +145,7 @@ export default function Profile() {
         </span>
         <div className="flex w-[577px]">
           <Input
-            placeholder="Search"
+            placeholder="Search by company name"
             size="large"
             suffix={suffix}
             onChange={(e) => handleSearch(e.target.value)}

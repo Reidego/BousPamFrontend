@@ -8,7 +8,7 @@ export default async function getUserByLogin(data: {
   password: string;
 }) {
   try {
-    const response = await axios.put(`${API_URL}/employee/login`, data);
+    const response = await axios.put(`${API_URL}/login`, data);
     return response.data;
   } catch (error) {
     console.error('Error fetching user by login:', error);

@@ -19,17 +19,6 @@ const filds = [
 
 type NotificationType = 'success' | 'info' | 'warning' | 'error';
 
-interface Cashear {
-  id?: number;
-  name: string;
-  surname: string;
-  login: string;
-  password: string;
-  phone_number: string;
-  gender: string;
-  date_of_birth: string;
-}
-
 interface ListProps {
   filter: string;
 }
@@ -39,6 +28,7 @@ const List: React.FC<ListProps> = ({ filter }) => {
   const { cashears } = useCashaerStore();
   // const [cashears] = useState<Cashear[]>([]);
   const router = useRouter();
+  let onlyCashiears = cashears.filter((item) => item.role !== 'Admin');
 
   useEffect(() => {
     if (!isAuth) router.push('/');
@@ -46,10 +36,10 @@ const List: React.FC<ListProps> = ({ filter }) => {
 
   const filteredItems = useMemo(() => {
     return filter
-      ? cashears.filter((item) =>
+      ? onlyCashiears.filter((item) =>
           item.surname.toLowerCase().startsWith(filter.toLowerCase())
         )
-      : cashears;
+      : onlyCashiears;
   }, [filter]);
 
   return (

@@ -7,10 +7,10 @@ import { useCompamyStore } from '@/store/companyStore';
 import { useTerminalStore } from '@/store/terminalStore';
 
 export default function Prfile() {
-  const { getCashears } = useCashaerStore();
+  const { getCashears, getPassengers } = useCashaerStore();
   const { getCompanys } = useCompamyStore();
   const { getTerminals } = useTerminalStore();
-  const { user, isAuth } = useUserStore();
+  const { user, isAuth, role } = useUserStore();
   const router = useRouter();
 
   const infoFilds = [
@@ -23,6 +23,7 @@ export default function Prfile() {
     if (!isAuth) {
       router.push('/');
     }
+    // role === 'Cashier' ? getPassengers() : null;
     getCashears();
     getCompanys();
     getTerminals();

@@ -31,10 +31,11 @@ const LeftMenu: React.FC = () => {
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
   };
+  console.log(role);
 
   const items: MenuItem[] = (() => {
     switch (role) {
-      case 'admin':
+      case 'Admin':
         return [
           {
             key: 1,
@@ -69,7 +70,7 @@ const LeftMenu: React.FC = () => {
             },
           },
         ];
-      case 'company':
+      case 'Owner':
         return [
           {
             key: 1,
@@ -112,7 +113,7 @@ const LeftMenu: React.FC = () => {
             },
           },
         ];
-      case 'cashier':
+      case 'Cashier':
         return [
           {
             key: 1,
