@@ -24,12 +24,10 @@ export default function Prfile() {
       router.push('/');
     }
     // role === 'Cashier' ? getPassengers() : null;
-    getCashears();
-    getCompanys();
-    getTerminals();
+    // getCashears();
+    // getCompanys();
+    // getTerminals();
   }, [isAuth]);
-
-  console.log(user);
 
   return (
     <div className="w-full">

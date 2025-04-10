@@ -18,43 +18,50 @@ type NotificationType = 'success' | 'info' | 'warning' | 'error';
 
 interface ListProps {
   filter: string;
+  items: {
+    id?: number;
+    name: string;
+    owner?: string;
+    owner_name?: string;
+    owner_surname?: string;
+  }[];
 }
 
-const List: React.FC<ListProps> = ({ filter }) => {
+const List: React.FC<ListProps> = ({ filter, items }) => {
   const { isAuth } = useUserStore();
   const router = useRouter();
-  const { companys, getCompanys } = useCompamyStore();
-
-  // useEffect(() => {
-  //   if (!isAuth) router.push('/');
-  // }, []);
-
-  getCompanys();
 
   const filteredItems = useMemo(() => {
     return filter
-      ? companys.filter((item) =>
+      ? items.filter((item) =>
           item.name.toLowerCase().startsWith(filter.toLowerCase())
         )
-      : companys;
-  }, [filter]);
+      : items;
+  }, [filter, items]);
 
   return (
     <div className="w-full border-[#F0F0F0] rounded-[8px] border-[0.5px]">
       <HeaderList filds={filds} />
-      {filteredItems.map((item, index) => (
-        <div
-          key={item.id}
-          className="bg-white h-[54px] text-black flex flex-col items-start justify-start"
-        >
-          <div className="flex">
-            <ListItemID id={index + 1} />
-            <ListItem title={item.name} />
-            <ListItem title={item.owner ?? ''} />
-          </div>
-          <hr className="text-[#F0F0F0] w-full" />
+
+      {filteredItems.length === 0 && (
+        <div className="flex items-center justify-center h-[200px] text-[16px] text-[#000000] opacity-45">
+          No companies found
         </div>
-      ))}
+      )}
+      {filteredItems.length > 0 &&
+        filteredItems.map((item, index) => (
+          <div
+            key={item.id}
+            className="bg-white h-[54px] text-black flex flex-col items-start justify-start"
+          >
+            <div className="flex">
+              <ListItemID id={index + 1} />
+              <ListItem title={item.name} />
+              <ListItem title={item.owner ?? ''} />
+            </div>
+            <hr className="text-[#F0F0F0] w-full" />
+          </div>
+        ))}
     </div>
   );
 };
@@ -72,7 +79,7 @@ const suffix = (
 );
 
 export default function Profile() {
-  const { companys, addCompany } = useCompamyStore();
+  const { companys, addCompany, getCompanys } = useCompamyStore();
   const [api, contextHolder] = notification.useNotification();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -80,6 +87,16 @@ export default function Profile() {
 
   const [modalFildsName, setModalFildsName] = useState('');
   const [modalFildsOwner, setModalFildsOwner] = useState('');
+
+  const [myCompany, setMyCompany] = useState(companys);
+
+  useEffect(() => {
+    // if (!isAuth) router.push('/');
+    (async () => {
+      const data = await getCompanys();
+      setMyCompany(data);
+    })();
+  }, []);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -153,7 +170,7 @@ export default function Profile() {
         </div>
       </div>
       <div className="w-full">
-        <List filter={searchTerm} />
+        <List filter={searchTerm} items={myCompany} />
       </div>
       <div className="flex text-[24px] justify-between w-full font-bold">
         <Pagination defaultCurrent={1} total={companys.length} />

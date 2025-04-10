@@ -12,7 +12,7 @@ interface Terminal {
 
 interface terminalsStore {
   terminals: Terminal[];
-  getTerminals: () => void;
+  getTerminals: () => Promise<Terminal[]>;
   addTerminal: (terminal: Terminal) => Promise<Terminal>;
 }
 export const useTerminalStore = create<terminalsStore>((set) => ({
@@ -27,6 +27,12 @@ export const useTerminalStore = create<terminalsStore>((set) => ({
         };
       }),
     }));
+    return terminals.map((terminal: Terminal) => {
+      return {
+        ...terminal,
+        terminalId: terminal.terminal_id,
+      };
+    });
   },
   addTerminal: async (terminal: Terminal) => {
     const newTerminal = await creatNewTerminal(terminal);

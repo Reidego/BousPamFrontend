@@ -21,46 +21,48 @@ type NotificationType = 'success' | 'info' | 'warning' | 'error';
 
 interface ListProps {
   filter: string;
+  items: any[];
 }
 
-const List: React.FC<ListProps> = ({ filter }) => {
-  const { isAuth } = useUserStore();
-  const { cashears } = useCashaerStore();
-  // const [cashears] = useState<Cashear[]>([]);
-  const router = useRouter();
-  let onlyCashiears = cashears.filter((item) => item.role !== 'Admin');
-
-  useEffect(() => {
-    if (!isAuth) router.push('/');
-  }, []);
+const List: React.FC<ListProps> = ({ filter, items }) => {
+  // let onlyCashiears = cashears.filter((item) => item.role !== 'Admin')
 
   const filteredItems = useMemo(() => {
     return filter
-      ? onlyCashiears.filter((item) =>
-          item.surname.toLowerCase().startsWith(filter.toLowerCase())
+      ? items.filter(
+          (item) =>
+            item.surname.toLowerCase().startsWith(filter.toLowerCase()) &&
+            item.role !== 'Admin'
         )
-      : onlyCashiears;
-  }, [filter]);
+      : items.filter((item) => item.role !== 'Admin');
+  }, [filter, items]);
 
   return (
     <div className="w-full border-[#F0F0F0] rounded-[8px] border-[0.5px]">
       <HeaderList filds={filds} />
-      {filteredItems.map((item, index) => (
-        <div
-          key={item.id}
-          className="bg-white h-[54px] text-black flex flex-col items-start justify-start"
-        >
-          <div key={item.id || index} className="flex">
-            <ListItemID id={index + 1} />
-            <ListItem title={item.name} />
-            <ListItem title={item.surname} />
-            <ListItem title={item.login} />
-            <ListItem title={item.gender} />
-            <ListItem title={item.date_of_birth} />
-          </div>
-          <hr className="text-[#F0F0F0] w-full" />
+      {filteredItems.length === 0 && (
+        <div className="flex items-center justify-center h-[54px] text-black font-bold">
+          No cashiers found
         </div>
-      ))}
+      )}
+
+      {filteredItems.length > 0 &&
+        filteredItems.map((item, index) => (
+          <div
+            key={item.id}
+            className="bg-white h-[54px] text-black flex flex-col items-start justify-start"
+          >
+            <div key={item.id || index} className="flex">
+              <ListItemID id={index + 1} />
+              <ListItem title={item.name} />
+              <ListItem title={item.surname} />
+              <ListItem title={item.login} />
+              <ListItem title={item.gender} />
+              <ListItem title={item.date_of_birth} />
+            </div>
+            <hr className="text-[#F0F0F0] w-full" />
+          </div>
+        ))}
     </div>
   );
 };
@@ -80,6 +82,22 @@ const suffix = (
 export default function Users() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { cashears, addCashear, getCashears } = useCashaerStore();
+
+  const { isAuth } = useUserStore();
+
+  const router = useRouter();
+
+  // const { companys, getCompanys } = useCompamyStore();
+
+  const [myUsers, setMyUsers] = useState(cashears);
+
+  useEffect(() => {
+    if (!isAuth) router.push('/');
+    (async () => {
+      const data = await getCashears();
+      setMyUsers(data);
+    })();
+  }, []);
 
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -119,13 +137,6 @@ export default function Users() {
   };
 
   const hendleCreate = () => {
-    // console.log('name', name);
-    // console.log('surame', surname);
-    // console.log('role', role);
-    // console.log('email', email);
-    // console.log('password', password);
-    // console.log('passwordConfirmation', passwordConfirmation);
-
     if (password !== passwordConfirmation) {
       openNotificationWithIcon('error');
       return;
@@ -172,7 +183,7 @@ export default function Users() {
         <span className="text-[24px] flex-nowrap">List of cashiers</span>
         <div className="flex w-[577px]">
           <Input
-            placeholder="Search"
+            placeholder="Search by surname"
             size="large"
             suffix={suffix}
             onChange={(e) => handleSearch(e.target.value)}
@@ -180,7 +191,7 @@ export default function Users() {
         </div>
       </div>
       <div className="w-full">
-        <List filter={searchTerm} />
+        <List filter={searchTerm} items={myUsers} />
       </div>
       <div className="flex text-[24px] justify-between w-full font-bold">
         <Pagination defaultCurrent={1} total={cashears.length} />

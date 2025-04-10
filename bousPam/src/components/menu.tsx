@@ -31,7 +31,6 @@ const LeftMenu: React.FC = () => {
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
   };
-  console.log(role);
 
   const items: MenuItem[] = (() => {
     switch (role) {

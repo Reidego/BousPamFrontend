@@ -56,22 +56,21 @@ export default function Passengers() {
   const { cashears, addPassenger, getPassengers } = useCashaerStore();
   // const [myPassengers, setMyPassengers] = useState(passengers);
   // const passengers = await getPassengers();
+  const { isAuth } = useUserStore();
+  const router = useRouter();
 
   const [searchTerm, setSearchTerm] = useState('');
 
   const [passengers, setPassengers] = useState([] as Passenger[]);
 
   useEffect(() => {
+    if (!isAuth) router.push('/');
+
     (async () => {
       const data = await getPassengers();
       setPassengers(data);
-      console.log(1);
     })();
   }, []);
-
-  useEffect(() => {
-    console.log(2);
-  }, [passengers]);
 
   const [passenger, setPassenger] = useState({
     name: '',
@@ -114,7 +113,6 @@ export default function Passengers() {
       passenger.passportNumber === '' ||
       passenger.phoneNmber === ''
     ) {
-      console.log(passenger);
       openNotificationWithIcon({
         type: 'error',
         title: 'Create new passenger',
@@ -123,7 +121,7 @@ export default function Passengers() {
       return;
     }
 
-    const newPassenger = await addPassenger({
+    const newPassenger = {
       name: passenger.name,
       surname: passenger.surname,
       e_mail: passenger.email,
@@ -132,7 +130,9 @@ export default function Passengers() {
       phone_number: passenger.phoneNmber,
       snils: '1234567890',
       card_number: passenger.cardNumber,
-    });
+    };
+
+    await addPassenger(newPassenger);
 
     setPassengers((prev) => [...prev, newPassenger]);
 
@@ -295,6 +295,7 @@ const List: React.FC<ListProps> = ({
   passengers,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const router = useRouter();
   const [listPassengers, setListPassengers] = useState(
     passengers as Passenger[]
   );
@@ -302,8 +303,8 @@ const List: React.FC<ListProps> = ({
   const { replenishPassengerBalance } = useCashaerStore();
 
   useEffect(() => {
-    setListPassengers(passengers);
-    console.log(3);
+    setListPassengers([...passengers]);
+    console.log('Updated passengers:', passengers);
   }, [passengers]);
 
   const showModal = () => {
@@ -356,9 +357,7 @@ const List: React.FC<ListProps> = ({
     amound: '',
   });
 
-  const { isAuth } = useUserStore();
   const { cashears } = useCashaerStore();
-  const router = useRouter();
 
   // const passengers = await getPassengers();
 
@@ -374,22 +373,19 @@ const List: React.FC<ListProps> = ({
   // const [total, setTotal] = useState(0);
   // const [loading, setLoading] = useState(false);
 
-  // useEffect(() => {
-  //   if (!isAuth) router.push('/');
-  // }, []);
-
-  const filteredItems = useMemo(() => {
-    return filter
-      ? listPassengers.filter((item) =>
-          item.surname.toLowerCase().startsWith(filter.toLowerCase())
-        )
-      : listPassengers;
-  }, [filter, listPassengers]);
+  // const filteredItems = useMemo(() => {
+  //   console.log('useMemo');
+  //   return filter
+  //     ? listPassengers.filter((item) =>
+  //         item.surname.toLowerCase().startsWith(filter.toLowerCase())
+  //       )
+  //     : listPassengers;
+  // }, [filter, listPassengers, passengers]);
 
   return (
     <div className="w-full border-[#F0F0F0] rounded-[8px] border-[0.5px]">
       <HeaderList filds={filds} />
-      {filteredItems.map((item, index) => (
+      {listPassengers.map((item, index) => (
         <div
           key={index}
           className="bg-white h-[54px] text-black flex items-start justify-between "

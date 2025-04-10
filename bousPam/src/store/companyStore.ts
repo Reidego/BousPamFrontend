@@ -11,7 +11,7 @@ interface Company {
 
 interface CompanyStore {
   companys: Company[];
-  getCompanys: () => void;
+  getCompanys: () => Promise<Company[]>;
   addCompany: (terminal: Company) => Promise<Company>;
 }
 
@@ -20,6 +20,7 @@ export const useCompamyStore = create<CompanyStore>((set) => ({
   getCompanys: async () => {
     const companys = await getAllCompanys();
     set(() => ({ companys }));
+    return companys;
   },
   addCompany: async (company: Company) => {
     if (company.owner_name && company.owner_surname) {

@@ -19,9 +19,17 @@ type NotificationType = 'success' | 'info' | 'warning' | 'error';
 
 interface ListProps {
   filter: string;
+  items: {
+    id?: number;
+    terminalId?: string;
+    fare: number;
+    company?: string;
+    terminal_id?: string;
+    company_name?: string;
+  }[];
 }
 
-const List: React.FC<ListProps> = ({ filter }) => {
+const List: React.FC<ListProps> = ({ filter, items }) => {
   const { isAuth } = useUserStore();
   const router = useRouter();
   const { terminals } = useTerminalStore();
@@ -32,29 +40,36 @@ const List: React.FC<ListProps> = ({ filter }) => {
 
   const filteredItems = useMemo(() => {
     return filter
-      ? terminals.filter((item) =>
+      ? items.filter((item) =>
           item?.company?.toLowerCase().startsWith(filter.toLowerCase())
         )
-      : terminals;
+      : items;
   }, [filter]);
 
   return (
     <div className="w-full border-[#F0F0F0] rounded-[8px] border-[0.5px]">
       <HeaderList filds={filds} />
-      {filteredItems.map((item, index) => (
-        <div
-          key={item.terminalId}
-          className="bg-white h-[54px] text-black flex flex-col items-start justify-start"
-        >
-          <div className="flex">
-            <ListItemID id={index + 1} />
-            <ListItem title={item.terminalId ?? ''} />
-            <ListItem title={`${item.fare}`} />
-            <ListItem title={item.company ?? ''} />
-          </div>
-          <hr className="text-[#F0F0F0] w-full" />
+
+      {filteredItems.length === 0 && (
+        <div className="flex items-center justify-center h-[200px] w-full">
+          <span className="text-[#C4C4C4] text-[16px]">No found terminal</span>
         </div>
-      ))}
+      )}
+      {filteredItems.length > 0 &&
+        filteredItems.map((item, index) => (
+          <div
+            key={item.terminalId}
+            className="bg-white h-[54px] text-black flex flex-col items-start justify-start"
+          >
+            <div className="flex">
+              <ListItemID id={index + 1} />
+              <ListItem title={item.terminalId ?? ''} />
+              <ListItem title={`${item.fare}`} />
+              <ListItem title={item.company ?? ''} />
+            </div>
+            <hr className="text-[#F0F0F0] w-full" />
+          </div>
+        ))}
     </div>
   );
 };
@@ -73,7 +88,7 @@ const suffix = (
 
 export default function Terminals() {
   const [api, contextHolder] = notification.useNotification();
-  const { terminals, addTerminal } = useTerminalStore();
+  const { terminals, addTerminal, getTerminals } = useTerminalStore();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -81,6 +96,16 @@ export default function Terminals() {
 
   const [modalFildsName, setModalFildsName] = useState('');
   const [modalFildsFare, setModalFildsFare] = useState(NaN);
+
+  const [myTerminal, setMyTerminal] = useState(terminals);
+
+  useEffect(() => {
+    // if (!isAuth) router.push('/');
+    (async () => {
+      const data = await getTerminals();
+      setMyTerminal(data);
+    })();
+  }, []);
 
   const hash = 'asadasd9asdudu89asud8998sad89sad9';
 
@@ -118,7 +143,6 @@ export default function Terminals() {
   };
 
   const hendleCreate = () => {
-    console.log('Create', modalFildsName, modalFildsFare);
     const terminal = {
       fare: modalFildsFare,
       company_name: modalFildsName,
@@ -146,10 +170,10 @@ export default function Terminals() {
         </div>
       </div>
       <div className="w-full">
-        <List filter={searchTerm} />
+        <List filter={searchTerm} items={myTerminal} />
       </div>
       <div className="flex text-[24px] justify-between w-full font-bold">
-        <Pagination defaultCurrent={1} total={terminals.length} />
+        <Pagination defaultCurrent={1} total={myTerminal.length} />
         <Button type="primary" onClick={showModal}>
           Create new terminal
         </Button>
