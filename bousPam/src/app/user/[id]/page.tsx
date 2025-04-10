@@ -1,29 +1,11 @@
 'use client';
-import { HeaderList, ListItem, ListItemID, WorkSpace } from '@/components';
-import {
-  Button,
-  Input,
-  Modal,
-  Pagination,
-  Space,
-  Tag,
-  message,
-  notification,
-} from 'antd';
-import {
-  CheckCircleOutlined,
-  ClockCircleOutlined,
-  CloseCircleOutlined,
-  ExclamationCircleOutlined,
-  MinusCircleOutlined,
-  SyncOutlined,
-} from '@ant-design/icons';
-import { useMemo, useState, useEffect, ReactNode } from 'react';
+import { HeaderList, ListItem, ListItemID } from '@/components';
+import { Pagination } from 'antd';
+import { useState, useEffect } from 'react';
 import '@ant-design/v5-patch-for-react-19';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useUserStore } from '@/store/userStore';
-import { useCashaerStore } from '@/store/cashearStore';
-import { text } from 'stream/consumers';
+import { usePassengerStore } from '@/store/passangerStore';
 
 const filds = [
   { id: 1, fildName: '№' },
@@ -66,10 +48,9 @@ const passengersFilds = [
 ];
 
 export default function Passengers() {
-  const { cashears, addCashear, getCashears } = useCashaerStore();
+  const { user } = usePassengerStore();
 
-  const path = usePathname();
-  const userSurname = path.split('/').at(-1);
+  const userSurname = user.surname;
   return (
     <div className="w-full">
       <div className="text-black  ml-[125px] mr-[90px] mb-[30px] mt-[56px] bg-[#fff] rounded-[8px] py-[28px] px-[100px] items-center justify-between flex-col gap-y-[48px] flex">
@@ -89,13 +70,28 @@ export default function Passengers() {
   );
 }
 
-interface ListProps {}
+// interface ListProps {}
 
-const List: React.FC<ListProps> = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+interface Operations {
+  balance_change: string;
+  datetime: Date;
+  id_operation: number;
+  data: string;
+  time: string;
+  company: string;
+  id_terminal: string;
+  id_user: number;
+  terminal_hash: string;
+  type: string;
+  state: string;
+}
+
+const List: React.FC = () => {
+  const [operations, setOperations] = useState([] as Operations[]);
+  // const [passengersFilds, setPassengersFilds] = useState();
 
   const { isAuth } = useUserStore();
-  const { cashears } = useCashaerStore();
+  const { getOpeartions, user } = usePassengerStore();
   const router = useRouter();
 
   // const [page, setPage] = useState(1);
@@ -104,35 +100,49 @@ const List: React.FC<ListProps> = () => {
   // const [loading, setLoading] = useState(false);
   useEffect(() => {
     if (!isAuth) router.push('/');
+    (async () => {
+      const data = (await getOpeartions(user.id)).map((item) => {
+        const datetime = new Date(item.datetime);
+        return {
+          ...item,
+          company: 'Bous Pam',
+          data: datetime.toISOString().split('T')[0],
+          time: datetime.toISOString().split('T')[1].split('.')[0],
+          state: 'Paid',
+        };
+      });
+      setOperations(data);
+      // setPassengersFilds(data);
+    })();
   }, []);
-
-  // const filteredItems = useMemo(() => {
-  //   return filter
-  //     ? passengersFilds.filter((item) =>
-  //         item.company.toLowerCase().startsWith(filter.toLowerCase())
-  //       )
-  //     : passengersFilds;
-  // }, [filter]);
 
   return (
     <div className="w-full border-[#F0F0F0] rounded-[8px] border-[0.5px]">
       <HeaderList filds={filds} />
-      {passengersFilds.map((item, index) => (
-        <div
-          key={item.cardtNumber}
-          className="bg-white h-[54px] text-black flex items-start "
-        >
-          <div className="flex">
-            <ListItemID id={index + 1} />
-            <ListItem title={item.company} />
-            <ListItem title={item.date} />
-            <ListItem title={item.time} />
-            <ListItem title={item.terminalId} />
-            <ListItem title={item.totalCost} />
-            <Status status={item.state} />
-          </div>
+      {operations.length === 0 && (
+        <div className="flex items-center justify-center h-[200px] w-full">
+          <span className="text-[#C4C4C4] text-[16px]">
+            No found operations
+          </span>
         </div>
-      ))}
+      )}
+      {operations.length > 0 &&
+        operations.map((item) => (
+          <div
+            key={item.id_operation}
+            className="bg-white h-[54px] text-black flex items-start "
+          >
+            <div className="flex">
+              <ListItemID id={item.id_operation} />
+              <ListItem title={item.company} />
+              <ListItem title={item.data} />
+              <ListItem title={item.time} />
+              <ListItem title={item.id_terminal} />
+              <ListItem title={item.balance_change} />
+              <Status status={item.state} />
+            </div>
+          </div>
+        ))}
     </div>
   );
 };

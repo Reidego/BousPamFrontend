@@ -14,7 +14,7 @@ export default function Auth() {
   const [api, contextHolder] = notification.useNotification();
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
-  const { setIsAuth, getUser }: any = useUserStore();
+  const { getUser }: any = useUserStore();
 
   const logIn = async () => {
     // get login and password

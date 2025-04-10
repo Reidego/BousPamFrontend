@@ -4,8 +4,6 @@ import { LeftMenu } from '@/components';
 import './globals.css';
 import '@ant-design/v5-patch-for-react-19';
 import { useUserStore } from '@/store/userStore';
-import { useRouter } from 'next/navigation';
-import { use } from 'react';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -27,7 +25,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { isAuth }: any = useUserStore();
+  const { isAuth }: { isAuth: boolean } = useUserStore();
   return (
     <html lang="en">
       <body

@@ -11,13 +11,13 @@ interface StoreState {
     role: string;
     birthdey: string;
   };
-
+  getUser: (login: string, password: string) => Promise<void>;
   setIsAuth: (auth: boolean) => void;
 }
 
 export const useUserStore = create<StoreState>((set) => ({
-  isAuth: true,
-  role: 'cashier',
+  isAuth: false,
+  role: '',
   user: {
     name: '',
     phoneNmber: '',

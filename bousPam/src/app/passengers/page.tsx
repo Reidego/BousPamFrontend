@@ -1,20 +1,13 @@
 'use client';
 import { HeaderList, ListItem, ListItemID, WorkSpace } from '@/components';
-import {
-  Button,
-  Input,
-  Modal,
-  Pagination,
-  Space,
-  message,
-  notification,
-} from 'antd';
-import { useMemo, useState, useEffect, ReactNode, use } from 'react';
+import { Button, Input, Modal, Pagination, notification } from 'antd';
+import { useState, useEffect, ReactNode } from 'react';
 import { SearchOutlined } from '@ant-design/icons';
 import '@ant-design/v5-patch-for-react-19';
 import { useRouter } from 'next/navigation';
 import { useUserStore } from '@/store/userStore';
 import { useCashaerStore } from '@/store/cashearStore';
+import { usePassengerStore } from '@/store/passangerStore';
 
 type NotificationType = 'success' | 'info' | 'warning' | 'error';
 
@@ -213,7 +206,7 @@ export default function Passengers() {
         centered
         open={isModalOpen}
         footer={[
-          <div className="w-full flex justify-between mt-[30px]">
+          <div key="1" className="w-full flex justify-between mt-[30px]">
             <Button key="back" onClick={handleCancel}>
               Cancel
             </Button>
@@ -296,10 +289,12 @@ const List: React.FC<ListProps> = ({
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
+  const { setPassengerForOperations } = usePassengerStore();
   const [listPassengers, setListPassengers] = useState(
     passengers as Passenger[]
   );
 
+  console.log(filter);
   const { replenishPassengerBalance } = useCashaerStore();
 
   useEffect(() => {
@@ -357,8 +352,6 @@ const List: React.FC<ListProps> = ({
     amound: '',
   });
 
-  const { cashears } = useCashaerStore();
-
   // const passengers = await getPassengers();
 
   // const passengers = [
@@ -411,7 +404,16 @@ const List: React.FC<ListProps> = ({
             </Button>
             <Button
               type="primary"
-              onClick={() => router.push(`/user/${item.surname}`)}
+              onClick={() => {
+                console.log('item', item);
+                setPassengerForOperations({
+                  id: item?.id ?? 0,
+                  name: item.name,
+                  surname: item.surname,
+                  phoneNmber: item.phone_number,
+                });
+                router.push(`/user/${item.surname}`);
+              }}
             >
               Operations
             </Button>
@@ -419,6 +421,7 @@ const List: React.FC<ListProps> = ({
         </div>
       ))}
       <Modal
+        key="123"
         title={
           <span className="w-full flex items-center justify-center font-medium">
             Replenish
@@ -428,7 +431,7 @@ const List: React.FC<ListProps> = ({
         open={isModalOpen}
         onCancel={handleCancel}
         footer={[
-          <div className="w-full flex justify-between mt-[30px]">
+          <div key="1" className="w-full flex justify-between mt-[30px]">
             <Button key="back" onClick={handleCancel}>
               Cancel
             </Button>

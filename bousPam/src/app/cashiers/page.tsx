@@ -206,9 +206,10 @@ export default function Users() {
           </span>
         }
         centered
+        onCancel={handleCancel}
         open={isModalOpen}
         footer={[
-          <div className="w-full flex justify-between mt-[30px]">
+          <div key="1" className="w-full flex justify-between mt-[30px]">
             <Button key="back" onClick={handleCancel}>
               Cancel
             </Button>

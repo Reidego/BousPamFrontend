@@ -1,7 +1,6 @@
 'use client';
 import React, { useState } from 'react';
 import {
-  AppstoreOutlined,
   CarOutlined,
   DesktopOutlined,
   EnvironmentOutlined,
@@ -11,16 +10,9 @@ import {
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
-import {
-  BousPam,
-  ArrowLeft,
-  ArrowRigth,
-  Terrmianl,
-  RouteItem,
-} from '@/utils/svg';
+import { BousPam, ArrowLeft, ArrowRigth, Terrmianl } from '@/utils/svg';
 import { useRouter } from 'next/navigation';
 import { useUserStore } from '@/store/userStore';
-import { useCashaerStore } from '@/store/cashearStore';
 
 type MenuItem = Required<MenuProps>['items'][number];
 

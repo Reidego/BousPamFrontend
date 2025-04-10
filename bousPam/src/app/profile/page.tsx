@@ -2,15 +2,9 @@
 import { useEffect } from 'react';
 import { useUserStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
-import { useCashaerStore } from '@/store/cashearStore';
-import { useCompamyStore } from '@/store/companyStore';
-import { useTerminalStore } from '@/store/terminalStore';
 
 export default function Prfile() {
-  const { getCashears, getPassengers } = useCashaerStore();
-  const { getCompanys } = useCompamyStore();
-  const { getTerminals } = useTerminalStore();
-  const { user, isAuth, role } = useUserStore();
+  const { user, isAuth } = useUserStore();
   const router = useRouter();
 
   const infoFilds = [

@@ -1,11 +1,9 @@
 'use client';
 import { HeaderList, ListItem, ListItemID, WorkSpace } from '@/components';
-import { Button, Input, Form, Modal, Pagination, notification } from 'antd';
+import { Button, Input, Modal, Pagination, notification } from 'antd';
 import { useMemo, useState, useEffect } from 'react';
 import { SearchOutlined } from '@ant-design/icons';
 import '@ant-design/v5-patch-for-react-19';
-import { useRouter } from 'next/navigation';
-import { useUserStore } from '@/store/userStore';
 import { useTerminalStore } from '@/store/terminalStore';
 
 const filds = [
@@ -30,10 +28,6 @@ interface ListProps {
 }
 
 const List: React.FC<ListProps> = ({ filter, items }) => {
-  const { isAuth } = useUserStore();
-  const router = useRouter();
-  const { terminals } = useTerminalStore();
-
   // useEffect(() => {
   //   if (!isAuth) router.push('/');
   // }, []);
@@ -185,9 +179,10 @@ export default function Terminals() {
           </span>
         }
         centered
+        onCancel={handleCancel}
         open={isModalOpen}
         footer={[
-          <div className="w-full flex justify-between mt-[30px]">
+          <div key="1" className="w-full flex justify-between mt-[30px]">
             <Button key="back" onClick={handleCancel}>
               Cancel
             </Button>
@@ -223,7 +218,4 @@ export default function Terminals() {
       </Modal>
     </WorkSpace>
   );
-}
-function useTerminalsStore(): { cashears: any; getCashears: any } {
-  throw new Error('Function not implemented.');
 }

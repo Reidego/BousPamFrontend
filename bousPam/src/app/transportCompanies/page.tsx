@@ -4,8 +4,6 @@ import { useMemo, useState, useEffect } from 'react';
 import { Input, Pagination, Button, Modal, notification } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import '@ant-design/v5-patch-for-react-19';
-import { useRouter } from 'next/navigation';
-import { useUserStore } from '@/store/userStore';
 import { useCompamyStore } from '@/store/companyStore';
 
 const filds = [
@@ -28,9 +26,6 @@ interface ListProps {
 }
 
 const List: React.FC<ListProps> = ({ filter, items }) => {
-  const { isAuth } = useUserStore();
-  const router = useRouter();
-
   const filteredItems = useMemo(() => {
     return filter
       ? items.filter((item) =>
@@ -110,6 +105,7 @@ export default function Profile() {
   const createCompany = () => {
     let [owner_name, owner_surname] = modalFildsOwner.split(' ');
     if (!owner_surname) owner_surname = owner_name;
+
     const newCompany = {
       name: modalFildsName,
       owner_name,
@@ -186,8 +182,9 @@ export default function Profile() {
         }
         centered
         open={isModalOpen}
+        onCancel={handleCancel}
         footer={[
-          <div className="w-full flex justify-between mt-[30px]">
+          <div key="1" className="w-full flex justify-between mt-[30px]">
             <Button key="back" onClick={handleCancel}>
               Cancel
             </Button>
