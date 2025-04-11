@@ -1,4 +1,4 @@
-import { getAllBuses, creatNewBus } from '@/utils/api/users';
+import { getAllBuses, creatNewBus } from '@/utils/api/buses';
 import { create } from 'zustand';
 
 interface Cashear {
@@ -14,33 +14,25 @@ interface Cashear {
 }
 
 interface Bus {
-  id?: number;
-  name: string;
-  surname: string;
-  e_mail: string;
-  passport_number: string;
-  inn: string;
-  tg_id?: string;
-  balance?: number;
-  phone_number: string;
-  snils: string;
-  card_number?: string;
+  number: string;
+  company_name: string;
+  id: number;
 }
 
 interface CashearStore {
   buses: Bus[];
-  getBus: () => Promise<Bus[]>;
-  addBus: (bus: Bus) => Promise<Bus>;
+  getAllBuses: () => Promise<Bus[]>;
+  addBus: (bus: { number: string; companyName: string }) => Promise<Bus>;
 }
 
-export const useCashaerStore = create<CashearStore>((set) => ({
+export const useBusesStore = create<CashearStore>((set) => ({
   buses: [],
-  getBus: async () => {
+  getAllBuses: async () => {
     const buses = await getAllBuses();
     set(() => ({ buses }));
     return buses;
   },
-  addBus: async (bus: Bus) => {
+  addBus: async (bus: { number: string; companyName: string }) => {
     const newBus = await creatNewBus(bus);
     set((state) => ({ buses: [...state.buses, newBus] }));
     return newBus;

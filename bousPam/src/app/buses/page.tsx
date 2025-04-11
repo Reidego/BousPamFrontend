@@ -1,19 +1,23 @@
 'use client';
 import { HeaderList, ListItem, ListItemID, WorkSpace } from '@/components';
 import { Button, Input, Modal, Pagination, notification } from 'antd';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { SearchOutlined } from '@ant-design/icons';
 import '@ant-design/v5-patch-for-react-19';
+import { useRouter } from 'next/navigation';
+import { useUserStore } from '@/store/userStore';
+import { useBusesStore } from '@/store/busesStore';
 
 type NotificationType = 'success' | 'info' | 'warning' | 'error';
 
 interface ListProps {
   filter: string;
+  items: any[];
 }
 
 const filds = [
   { id: 1, fildName: '№' },
-  { id: 2, fildName: 'Terminal id' },
+  { id: 2, fildName: 'Company name' },
   { id: 3, fildName: 'Route' },
   { id: 4, fildName: 'Number' },
 ];
@@ -25,7 +29,7 @@ const buses = [
   { id: 4, terminalId: '101', route: 'D-E', number: 'DE101' },
 ];
 
-const List: React.FC<ListProps> = ({ filter }) => {
+const List: React.FC<ListProps> = ({ filter, items }) => {
   //   const { terminals } = useTerminalStore();
 
   // useEffect(() => {
@@ -34,12 +38,13 @@ const List: React.FC<ListProps> = ({ filter }) => {
 
   const filteredItems = useMemo(() => {
     return filter
-      ? buses.filter((item) =>
+      ? items.filter((item) =>
           item?.number?.toLowerCase().startsWith(filter.toLowerCase())
         )
-      : buses;
-  }, [filter]);
+      : items;
+  }, [filter, items]);
 
+  console.log(items);
   return (
     <div className="w-full border-[#F0F0F0] rounded-[8px] border-[0.5px]">
       <HeaderList filds={filds} />
@@ -50,8 +55,8 @@ const List: React.FC<ListProps> = ({ filter }) => {
         >
           <div className="flex">
             <ListItemID id={index + 1} />
-            <ListItem title={item.terminalId ?? ''} />
-            <ListItem title={item.route ?? ''} />
+            <ListItem title={item.company_name ?? ''} />
+            <ListItem title={item.route ?? 'Belarus'} />
             <ListItem title={item.number ?? ''} />
           </div>
           <hr className="text-[#F0F0F0] w-full" />
@@ -73,16 +78,26 @@ const suffix = (
   </button>
 );
 
-export default function Terminals() {
+export default function Bus() {
   const [api, contextHolder] = notification.useNotification();
+
+  const { isAuth } = useUserStore();
+
+  const { buses, getAllBuses, addBus } = useBusesStore();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState('');
 
+  const [myBuses, setMyBuses] = useState(buses);
+
+  // {
+  //   number: string;
+  //   company_name: string;
+  //   id: number;
+  // }
   const [newBus, setNewBus] = useState({
-    terminalId: '',
-    route: '',
+    companyName: '',
     number: '',
   });
 
@@ -90,14 +105,23 @@ export default function Terminals() {
     setIsModalOpen(true);
   };
 
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isAuth) router.push('/');
+    (async () => {
+      const data = await getAllBuses();
+      setMyBuses(data);
+    })();
+  }, []);
+
   const openNotificationWithIcon = (type: NotificationType) => {
     api[type]({
       placement: 'top',
       message: 'Terminal created',
       description: (
         <div className="flex flex-col">
-          <span>{`Terminal ID: ${newBus.terminalId}`}</span>
-          <span>{`Route: ${newBus.route}`}</span>
+          <span>{`Company name: ${newBus.companyName}`}</span>
           <span>{`Bus number: ${newBus.number}`}</span>
         </div>
       ),
@@ -117,29 +141,25 @@ export default function Terminals() {
 
   const clearModalFields = () => {
     setNewBus({
-      terminalId: '',
-      route: '',
+      companyName: '',
       number: '',
     });
   };
 
   const hendleCreate = () => {
-    if (!newBus.terminalId || !newBus.route || !newBus.number) {
+    if (!newBus.companyName || !newBus.number) {
       openNotificationWithIcon('error');
       return;
     }
 
-    buses.push({
-      id: buses.length + 1,
-      terminalId: newBus.terminalId,
-      route: newBus.route,
+    const bus = {
       number: newBus.number,
-    });
-    // const terminal = {
-    //   fare: modalFildsFare,
-    //   company_name: modalFildsName,
-    // };
-    // addTerminal(terminal);
+      company_name: newBus.companyName,
+    };
+
+    addBus(newBus);
+
+    setMyBuses((prev) => [...prev, { ...bus, id: myBuses.length + 1 }]);
 
     openNotificationWithIcon('success');
     setIsModalOpen(false);
@@ -162,10 +182,10 @@ export default function Terminals() {
         </div>
       </div>
       <div className="w-full">
-        <List filter={searchTerm} />
+        <List filter={searchTerm} items={myBuses} />
       </div>
       <div className="flex text-[24px] justify-between w-full font-bold">
-        <Pagination defaultCurrent={1} total={buses.length} />
+        <Pagination defaultCurrent={1} total={myBuses.length} />
         <Button type="primary" onClick={showModal}>
           Create new bus
         </Button>
@@ -192,12 +212,12 @@ export default function Terminals() {
       >
         <form>
           <div className="flex flex-col gap-y-[2px]">
-            <span className="text-[#007AFF]">Terminal Id</span>
+            <span className="text-[#007AFF]">Company name</span>
             <Input
               id="companyName"
-              value={newBus.terminalId}
+              value={newBus.companyName}
               onChange={(e) =>
-                setNewBus({ ...newBus, terminalId: e.target.value })
+                setNewBus({ ...newBus, companyName: e.target.value })
               }
             />
           </div>
@@ -207,14 +227,6 @@ export default function Terminals() {
               id="companyName"
               value={newBus.number}
               onChange={(e) => setNewBus({ ...newBus, number: e.target.value })}
-            />
-          </div>
-          <div className="flex flex-col gap-y-[2px]">
-            <span className="text-[#007AFF]">Route</span>
-            <Input
-              id="companyName"
-              value={newBus.route}
-              onChange={(e) => setNewBus({ ...newBus, route: e.target.value })}
             />
           </div>
         </form>

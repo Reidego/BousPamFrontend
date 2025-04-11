@@ -1,3 +1,4 @@
+import { creatNewRoute, getAllRoutes } from '@/utils/api/routes';
 import {
   creatNewCashier,
   creatNewPassenger,
@@ -19,55 +20,33 @@ interface Cashear {
   date_of_birth: string;
 }
 
-interface Passengers {
-  id?: number;
+interface route {
+  transport_company: string;
   name: string;
-  surname: string;
-  e_mail: string;
-  passport_number: string;
-  inn: string;
-  tg_id?: string;
-  balance?: number;
-  phone_number: string;
-  snils: string;
-  card_number?: string;
+  stops: string[];
+  terminal_id: number;
+  bus_number: string;
 }
 
 interface CashearStore {
-  cashears: Cashear[];
-  passengers: Passengers[];
-  getCashears: () => Promise<Cashear[]>;
-  getPassengers: () => Promise<Passengers[]>;
-  addPassenger: (passenger: Passengers) => Promise<Passengers>;
-  addCashear: (cashear: Cashear) => Promise<Cashear>;
-
-  replenishPassengerBalance: (id: string, amount: number) => Promise<void>;
+  routes: route[];
+  getRoutes: () => Promise<route[]>;
+  addRoute: (route: route) => Promise<route>;
 }
 
-export const useCashaerStore = create<CashearStore>((set) => ({
-  cashears: [],
-  passengers: [],
-  replenishPassengerBalance: async (cardNumber: string, amount: number) => {
-    await replenishPassenger(cardNumber, amount);
+export const useRouteStore = create<CashearStore>((set) => ({
+  routes: [],
+  getRoutes: async () => {
+    const routes = await getAllRoutes();
+    set(() => ({ routes }));
+    return routes;
   },
-  getCashears: async () => {
-    const cashears = await getAllCashiers();
-    set(() => ({ cashears }));
-    return cashears;
-  },
-  getPassengers: async () => {
-    const passengers = await getAllPassengers();
-    set(() => ({ passengers }));
-    return passengers;
-  },
-  addPassenger: async (passenger: Passengers) => {
-    const newPassenger = await creatNewPassenger(passenger);
-    set((state) => ({ passengers: [...state.passengers, newPassenger] }));
-    return newPassenger;
-  },
-  addCashear: async (cashear: Cashear) => {
-    const newCashear = await creatNewCashier(cashear);
-    set((state) => ({ cashears: [...state.cashears, newCashear] }));
-    return newCashear;
+  addRoute: async (route: route) => {
+    const newRoute = await creatNewRoute(route);
+
+    if (typeof newRoute !== 'string')
+      set((state) => ({ routes: [...state.routes, route] }));
+
+    return newRoute;
   },
 }));

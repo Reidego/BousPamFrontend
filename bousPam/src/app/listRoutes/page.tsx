@@ -1,14 +1,18 @@
 'use client';
 import { HeaderList, ListItem, ListItemID, WorkSpace } from '@/components';
 import { Button, Input, Modal, Pagination, notification } from 'antd';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { SearchOutlined } from '@ant-design/icons';
 import '@ant-design/v5-patch-for-react-19';
+import { useUserStore } from '@/store/userStore';
+import { useRouter } from 'next/navigation';
+import { useRouteStore } from '@/store/routesStore';
 
 type NotificationType = 'success' | 'info' | 'warning' | 'error';
 
 interface ListProps {
   filter: string;
+  items: any[];
 }
 
 const filds = [
@@ -20,71 +24,35 @@ const filds = [
   { id: 6, fildName: 'Last stop' },
 ];
 
-const route = [
-  {
-    id: 1,
-    terminalId: '123',
-    route: 'A-B',
-    busNumber: 'AB123',
-    firstStop: 'A',
-    lastStop: 'B',
-  },
-  {
-    id: 2,
-    terminalId: '456',
-    route: 'B-C',
-    busNumber: 'BC456',
-    firstStop: 'B',
-    lastStop: 'C',
-  },
-  {
-    id: 3,
-    terminalId: '789',
-    route: 'C-D',
-    busNumber: 'CD789',
-    firstStop: 'C',
-    lastStop: 'D',
-  },
-  {
-    id: 4,
-    terminalId: '101',
-    route: 'D-E',
-    busNumber: 'DE101',
-    firstStop: 'D',
-    lastStop: 'E',
-  },
-];
-
-const List: React.FC<ListProps> = ({ filter }) => {
+const List: React.FC<ListProps> = ({ filter, items }) => {
   //const { terminals } = useTerminalStore();
 
   // useEffect(() => {
   //   if (!isAuth) router.push('/');
   // }, []);
-
   const filteredItems = useMemo(() => {
     return filter
-      ? route.filter((item) =>
+      ? items.filter((item) =>
           item?.terminalId?.toLowerCase().startsWith(filter.toLowerCase())
         )
-      : route;
-  }, [filter]);
-
+      : items;
+  }, [filter, items]);
+  console.log(filteredItems);
   return (
     <div className="w-full border-[#F0F0F0] rounded-[8px] border-[0.5px]">
       <HeaderList filds={filds} />
       {filteredItems.map((item, index) => (
         <div
-          key={item.id}
+          key={index + 1}
           className="bg-white h-[54px] text-black flex flex-col items-start justify-start"
         >
           <div className="flex">
             <ListItemID id={index + 1} />
-            <ListItem title={item.terminalId ?? ''} />
-            <ListItem title={item.route ?? ''} />
-            <ListItem title={item.busNumber ?? ''} />
-            <ListItem title={item.firstStop ?? ''} />
-            <ListItem title={item.lastStop ?? ''} />
+            <ListItem title={item.terminal_id ?? item.terminalId} />
+            <ListItem title={item.name ?? ''} />
+            <ListItem title={item?.bus_number ?? item?.busNumber ?? ''} />
+            <ListItem title={item?.stops[0] ?? ''} />
+            <ListItem title={item?.stops?.at(-1) ?? ''} />
           </div>
           <hr className="text-[#F0F0F0] w-full" />
         </div>
@@ -105,30 +73,51 @@ const suffix = (
   </button>
 );
 
-export default function Terminals() {
+export default function Routes() {
   const [api, contextHolder] = notification.useNotification();
+
+  const { isAuth } = useUserStore();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState('');
 
+  const { routes, getRoutes, addRoute } = useRouteStore();
+
+  const [myRoute, setMyRoute] = useState(routes);
+
+  const router = useRouter();
+
   const [newRoute, setNewRoute] = useState({
     terminalId: '',
     route: '',
+    transportCompany: '',
     busNumber: '',
     firstStop: '',
     lastStop: '',
   });
 
+  useEffect(() => {
+    if (!isAuth) router.push('/');
+    (async () => {
+      const data = await getRoutes();
+      setMyRoute(data);
+    })();
+  }, []);
+
   const showModal = () => {
     setIsModalOpen(true);
   };
 
-  const openNotificationWithIcon = (type: NotificationType) => {
+  const openNotificationWithIcon = (type: NotificationType, error?: string) => {
     api[type]({
       placement: 'top',
       message: 'Terminal created',
-      description: (
+      description: error ? (
+        <div className="flex flex-col">
+          <span>{`Error: ${error}`}</span>
+        </div>
+      ) : (
         <div className="flex flex-col">
           <span>{`Terminal Id: ${newRoute.terminalId}`}</span>
           <span>{`Route: ${newRoute.route}`}</span>
@@ -154,6 +143,7 @@ export default function Terminals() {
   const clearModalFields = () => {
     setNewRoute({
       terminalId: '',
+      transportCompany: '',
       route: '',
       busNumber: '',
       firstStop: '',
@@ -161,7 +151,7 @@ export default function Terminals() {
     });
   };
 
-  const hendleCreate = () => {
+  const hendleCreate = async () => {
     if (
       !newRoute.terminalId ||
       !newRoute.route ||
@@ -172,19 +162,32 @@ export default function Terminals() {
       openNotificationWithIcon('error');
       return;
     }
-    // const terminal = {
-    //   fare: modalFildsFare,
-    //   company_name: modalFildsName,
-    // };
-    // addTerminal(terminal);
-    route.push({
-      id: route.length + 1,
-      terminalId: newRoute.terminalId,
-      route: newRoute.route,
-      busNumber: newRoute.busNumber,
-      firstStop: newRoute.firstStop,
-      lastStop: newRoute.lastStop,
-    });
+
+    const route = {
+      transport_company: newRoute.transportCompany,
+      name: newRoute.route,
+      stops: [newRoute.firstStop, newRoute.lastStop],
+      terminal_id: +newRoute.terminalId,
+      bus_number: newRoute.busNumber,
+    };
+
+    const respons = await addRoute(route);
+
+    if (typeof respons === 'string') {
+      openNotificationWithIcon('error', respons);
+      return;
+    }
+
+    setMyRoute((prev) => [...prev, { ...route }]);
+
+    // route.push({
+    //   id: route.length + 1,
+    //   terminalId: newRoute.terminalId,
+    //   route: newRoute.route,
+    //   busNumber: newRoute.busNumber,
+    //   firstStop: newRoute.firstStop,
+    //   lastStop: newRoute.lastStop,
+    // });
 
     openNotificationWithIcon('success');
     setIsModalOpen(false);
@@ -207,10 +210,10 @@ export default function Terminals() {
         </div>
       </div>
       <div className="w-full">
-        <List filter={searchTerm} />
+        <List filter={searchTerm} items={myRoute} />
       </div>
       <div className="flex text-[24px] justify-between w-full font-bold">
-        <Pagination defaultCurrent={1} total={route.length} />
+        <Pagination defaultCurrent={1} total={myRoute.length} />
         <Button type="primary" onClick={showModal}>
           Create new route
         </Button>
@@ -241,8 +244,21 @@ export default function Terminals() {
             <Input
               id="companyName"
               value={newRoute.terminalId}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (/^\d*$/.test(value)) {
+                  setNewRoute({ ...newRoute, terminalId: value });
+                }
+              }}
+            />
+          </div>
+          <div className="flex flex-col gap-y-[2px]">
+            <span className="text-[#007AFF]">Transport company</span>
+            <Input
+              id="companyName"
+              value={newRoute.transportCompany}
               onChange={(e) =>
-                setNewRoute({ ...newRoute, terminalId: e.target.value })
+                setNewRoute({ ...newRoute, transportCompany: e.target.value })
               }
             />
           </div>

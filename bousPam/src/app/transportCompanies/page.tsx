@@ -113,7 +113,6 @@ export default function Profile() {
     };
 
     addCompany(newCompany);
-    // companys.push(newCompany);
 
     openNotificationWithIcon('success');
 

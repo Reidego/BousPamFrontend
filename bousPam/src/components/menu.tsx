@@ -71,14 +71,14 @@ const LeftMenu: React.FC = () => {
               router.push('/profile');
             },
           },
-          {
-            key: 2,
-            icon: <DesktopOutlined style={{ fontSize: '20px' }} />,
-            label: 'Drivers',
-            onClick: () => {
-              router.push('/drivers');
-            },
-          },
+          // {
+          //   key: 2,
+          //   icon: <DesktopOutlined style={{ fontSize: '20px' }} />,
+          //   label: 'Drivers',
+          //   onClick: () => {
+          //     router.push('/drivers');
+          //   },
+          // },
           {
             key: 4,
             icon: <Terrmianl />,

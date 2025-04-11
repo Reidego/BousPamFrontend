@@ -12,16 +12,6 @@ export const getCashierByName = async (name: string) => {
   }
 };
 
-export const getAllBuses = async () => {
-  try {
-    const response = await axios.get(`${API_URL}/users/getlist`);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching all Cashier:', error);
-    throw error;
-  }
-};
-
 export const getAllOperations = async (user_id: number) => {
   try {
     const response = await axios.get(`${API_URL}/operations/get/by-user-id/`, {
@@ -81,16 +71,6 @@ export const creatNewPassenger = async (data: any) => {
 };
 
 export const creatNewCashier = async (data: any) => {
-  try {
-    const response = await axios.post(`${API_URL}/employee/create`, data);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching create Cashier:', error);
-    throw error;
-  }
-};
-
-export const creatNewBus = async (data: any) => {
   try {
     const response = await axios.post(`${API_URL}/employee/create`, data);
     return response.data;
