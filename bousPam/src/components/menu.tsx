@@ -177,7 +177,7 @@ const LeftMenu: React.FC = () => {
               <span
                 className={`text-[16px] ${collapsed ? 'hidden' : 'pl-[8px]'}`}
               >
-                Выход
+                Log out
               </span>
             </button>
           </div>

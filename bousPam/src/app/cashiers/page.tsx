@@ -52,7 +52,7 @@ const List: React.FC<ListProps> = ({ filter, items }) => {
             key={item.id}
             className="bg-white h-[54px] text-black flex flex-col items-start justify-start"
           >
-            <div key={item.id || index} className="flex">
+            <div key={index} className="flex">
               <ListItemID id={index + 1} />
               <ListItem title={item.name} />
               <ListItem title={item.surname} />
@@ -93,6 +93,7 @@ export default function Users() {
 
   useEffect(() => {
     if (!isAuth) router.push('/');
+
     (async () => {
       const data = await getCashears();
       setMyUsers(data);
@@ -117,11 +118,13 @@ export default function Users() {
 
   const [api, contextHolder] = notification.useNotification();
 
-  const openNotificationWithIcon = (type: NotificationType) => {
+  const openNotificationWithIcon = (type: NotificationType, error?: string) => {
     api[type]({
       placement: 'top',
-      message: 'Terminal created',
-      description: (
+      message: 'Cashier created',
+      description: error ? (
+        <span>{`Error: ${error}`}</span>
+      ) : (
         <div className="flex flex-col">
           <span>{`Name: ${name}`}</span>
           <span>{`Surname: ${surname}`}</span>
@@ -136,12 +139,13 @@ export default function Users() {
     });
   };
 
-  const hendleCreate = () => {
+  const hendleCreate = async () => {
     if (password !== passwordConfirmation) {
       openNotificationWithIcon('error');
       return;
     }
     const data = {
+      id: myUsers.length + 1,
       name,
       surname,
       password,
@@ -151,7 +155,12 @@ export default function Users() {
       date_of_birth: dateOfBirth,
       phone_number: phoneNmber,
     };
-    addCashear(data);
+    const newCashier = await addCashear(data);
+    if (typeof newCashier === 'string') {
+      openNotificationWithIcon('error', newCashier);
+      return;
+    }
+    setMyUsers((prev) => [...prev, data]);
     openNotificationWithIcon('success');
     getCashears();
     setIsModalOpen(false);

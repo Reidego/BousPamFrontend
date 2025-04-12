@@ -67,7 +67,9 @@ export const useCashaerStore = create<CashearStore>((set) => ({
   },
   addCashear: async (cashear: Cashear) => {
     const newCashear = await creatNewCashier(cashear);
-    set((state) => ({ cashears: [...state.cashears, newCashear] }));
+    typeof newCashear !== 'string'
+      ? set((state) => ({ cashears: [...state.cashears, cashear] }))
+      : undefined;
     return newCashear;
   },
 }));

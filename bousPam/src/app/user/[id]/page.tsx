@@ -19,30 +19,33 @@ const filds = [
 
 const passengersFilds = [
   {
+    id_operation: 1,
     cardtNumber: 1,
     company: 'Company 1',
-    date: '2023-10-01',
+    data: '2023-10-01',
     time: '12:00',
-    terminalId: '1',
-    totalCost: '100',
+    id_terminal: '1',
+    balance_change: '100',
     state: 'Paid',
   },
   {
+    id_operation: 2,
     cardtNumber: 2,
     company: 'Company 2',
-    date: '2023-10-02',
+    data: '2023-10-02',
     time: '14:00',
-    terminalId: '2',
-    totalCost: '200',
+    id_terminal: '2',
+    balance_change: '200',
     state: 'Not Paid',
   },
   {
+    id_operation: 3,
     cardtNumber: 3,
     company: 'Company 3',
-    date: '2023-10-03',
+    data: '2023-10-03',
     time: '16:00',
-    terminalId: '3',
-    totalCost: '300',
+    id_terminal: '3',
+    balance_change: '300',
     state: 'Canceled',
   },
 ];
@@ -111,7 +114,15 @@ const List: React.FC = () => {
           state: 'Paid',
         };
       });
-      setOperations(data);
+      setOperations(
+        passengersFilds.map((item) => ({
+          ...item,
+          datetime: new Date(), // Placeholder value
+          id_user: 0, // Placeholder value
+          terminal_hash: '', // Placeholder value
+          type: '', // Placeholder value
+        }))
+      );
       // setPassengersFilds(data);
     })();
   }, []);

@@ -8,9 +8,9 @@ export default function Prfile() {
   const router = useRouter();
 
   const infoFilds = [
-    { id: 1, fildName: 'Gender', fildData: user.gender },
+    { id: 1, fildName: 'Gender', fildData: user.gender ?? 'man' },
     { id: 2, fildName: 'Role', fildData: user.role },
-    { id: 3, fildName: 'Date of birth', fildData: user.birthdey },
+    { id: 3, fildName: 'Date of birth', fildData: user.birthdey ?? '11.12.00' },
   ];
 
   useEffect(() => {
