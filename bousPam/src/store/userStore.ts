@@ -31,7 +31,7 @@ export const useUserStore = create<StoreState>((set) => ({
       if (user?.role) {
         set(() => ({ role: user.role }));
       }
-      set(() => ({ isAuth: true }));
+      // set(() => ({ isAuth: true }));
       set(() => ({
         user: {
           name: `${user.name} ${user.surname}`,
@@ -41,6 +41,7 @@ export const useUserStore = create<StoreState>((set) => ({
           birthdey: user.date_of_birth,
         },
       }));
+      return user;
     }
   },
   setIsAuth: (auth: boolean) => set(() => ({ isAuth: auth })),

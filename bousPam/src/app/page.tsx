@@ -1,42 +1,62 @@
 'use client';
-import { Input, Button, Space, notification } from 'antd';
+import { Input, Button, Space, notification, Modal } from 'antd';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { BousPam } from '@/utils/svg';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import '@ant-design/v5-patch-for-react-19';
 import { useUserStore } from '@/store/userStore';
+import { OTPProps } from 'antd/es/input/OTP';
 
 type NotificationType = 'success' | 'info' | 'warning' | 'error';
 
 export default function Auth() {
   const router = useRouter();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [api, contextHolder] = notification.useNotification();
   const [login, setLogin] = useState('');
+  const [code, setCode] = useState('');
   const [password, setPassword] = useState('');
-  const { getUser }: any = useUserStore();
+  const { getUser, setIsAuth }: any = useUserStore();
+  let user;
 
   const logIn = async () => {
     // get login and password
     if (!login || !password) {
-      openNotificationWithIcon('error');
+      openNotificationWithIcon(
+        'error',
+        'Please check your login and password.'
+      );
       return;
     }
 
-    await getUser(login, password);
-
-    router.push('/profile');
+    user = await getUser(login, password);
+    setIsModalOpen(true);
+  };
+  const verify = () => {
+    if (code === '123123') {
+      router.push('/profile');
+      setIsAuth(true);
+    } else openNotificationWithIcon('error', 'Invalid confirmation code.');
   };
 
-  const openNotificationWithIcon = (type: NotificationType) => {
+  const openNotificationWithIcon = (type: NotificationType, msg: string) => {
     api[type]({
       placement: 'top',
       message: 'Failed authorization: ',
-      description: 'Please check your login and password.',
+      description: msg,
       showProgress: true,
       pauseOnHover: false,
       duration: 3,
     });
+  };
+  const onChange: OTPProps['onChange'] = (text) => {
+    setCode(text);
+  };
+
+  const sharedProps: OTPProps = {
+    onChange,
   };
 
   // const [passwordVisible, setPasswordVisible] = useState(false);
@@ -84,6 +104,39 @@ export default function Auth() {
           </div>
         </div>
       </div>
+      <Modal
+        title={
+          <span className="w-full flex items-center justify-center font-medium">
+            Verification
+          </span>
+        }
+        centered
+        onCancel={() => setIsModalOpen(false)}
+        open={isModalOpen}
+        footer={[
+          <div key="1" className="w-full flex justify-between mt-[30px]">
+            <Button key="back" onClick={() => setIsModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button key="submit" type="primary" onClick={verify}>
+              Confirm
+            </Button>
+          </div>,
+        ]}
+      >
+        <div className="h-[60px] flex flex-col gap-y-[18px]">
+          <span>
+            Please enter the confirmation code sent to you in the telegram.
+          </span>
+          <div className="flex items-center justify-center w-full">
+            <Input.OTP
+              formatter={(str) => str.replace(/\D/g, '')}
+              {...sharedProps}
+              // Ensures only digits are allowed
+            />
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }
