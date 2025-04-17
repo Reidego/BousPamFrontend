@@ -20,7 +20,7 @@ export const creatNewRoute = async (data: {
   bus_number: string;
 }) => {
   try {
-    console.log(data);
+    // console.log(data);
     const response = await axios.post(`${API_URL}/route/create`, data);
     return response.data;
   } catch (error) {

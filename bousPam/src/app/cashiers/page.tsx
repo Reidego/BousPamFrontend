@@ -21,12 +21,18 @@ type NotificationType = 'success' | 'info' | 'warning' | 'error';
 
 interface ListProps {
   filter: string;
-  items: any[];
+  items: {
+    id?: number;
+    name: string;
+    surname: string;
+    login: string;
+    gender: string;
+    date_of_birth: string;
+    role: string;
+  }[];
 }
 
 const List: React.FC<ListProps> = ({ filter, items }) => {
-  // let onlyCashiears = cashears.filter((item) => item.role !== 'Admin')
-
   const filteredItems = useMemo(() => {
     return filter
       ? items.filter(
@@ -129,7 +135,7 @@ export default function Users() {
           <span>{`Name: ${name}`}</span>
           <span>{`Surname: ${surname}`}</span>
           <span className="pt-[16px]">
-            Full information in cashier’s profile
+            Full information in cashiers profile
           </span>
         </div>
       ),
