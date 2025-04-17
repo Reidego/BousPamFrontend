@@ -104,26 +104,19 @@ const List: React.FC = () => {
   useEffect(() => {
     if (!isAuth) router.push('/');
     (async () => {
-      const data = (await getOpeartions(user.id)).map((item) => {
-        const datetime = new Date(item.datetime);
-        return {
-          ...item,
-          company: 'Bous Pam',
-          data: datetime.toISOString().split('T')[0],
-          time: datetime.toISOString().split('T')[1].split('.')[0],
-          state: 'Paid',
-        };
-      });
+      const operationsData = await getOpeartions(user.id);
       setOperations(
-        passengersFilds.map((item) => ({
-          ...item,
-          datetime: new Date(), // Placeholder value
-          id_user: 0, // Placeholder value
-          terminal_hash: '', // Placeholder value
-          type: '', // Placeholder value
-        }))
+        operationsData.map((item) => {
+          const datetime = new Date(item.datetime);
+          return {
+            ...item,
+            company: 'Bous Pam',
+            data: datetime.toISOString().split('T')[0],
+            time: datetime.toISOString().split('T')[1].split('.')[0],
+            state: 'Paid',
+          };
+        })
       );
-      // setPassengersFilds(data);
     })();
   }, []);
 

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useUserStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
 import { Button, Input, Modal } from 'antd';
-import { OTPProps } from 'antd/es/input/OTP';
+// import { OTPProps } from 'antd/es/input/OTP';
 
 export default function Prfile() {
   const { user, isAuth } = useUserStore();

@@ -12,17 +12,27 @@ type NotificationType = 'success' | 'info' | 'warning' | 'error';
 
 interface ListProps {
   filter: string;
-  items: any[];
+  items: {
+    id: number;
+    company_name?: string;
+    route?: string;
+    number?: string;
+  }[];
 }
 
-const filds = [
+const fields = [
   { id: 1, fildName: '№' },
   { id: 2, fildName: 'Company name' },
   { id: 3, fildName: 'Route' },
   { id: 4, fildName: 'Number' },
 ];
 
-const buses = [
+const buses: {
+  id: number;
+  terminalId: string;
+  route: string;
+  number: string;
+}[] = [
   { id: 1, terminalId: '123', route: 'A-B', number: 'AB123' },
   { id: 2, terminalId: '456', route: 'B-C', number: 'BC456' },
   { id: 3, terminalId: '789', route: 'C-D', number: 'CD789' },
@@ -47,7 +57,7 @@ const List: React.FC<ListProps> = ({ filter, items }) => {
   console.log(items);
   return (
     <div className="w-full border-[#F0F0F0] rounded-[8px] border-[0.5px]">
-      <HeaderList filds={filds} />
+      <HeaderList filds={fields} />
       {filteredItems.map((item, index) => (
         <div
           key={item.id}

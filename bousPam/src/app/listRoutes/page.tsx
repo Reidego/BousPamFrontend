@@ -12,10 +12,17 @@ type NotificationType = 'success' | 'info' | 'warning' | 'error';
 
 interface ListProps {
   filter: string;
-  items: any[];
+  items: {
+    terminal_id?: string | number;
+    terminalId?: string;
+    name?: string;
+    bus_number?: string;
+    busNumber?: string;
+    stops?: string[];
+  }[];
 }
 
-const filds = [
+const fields: { id: number; fildName: string }[] = [
   { id: 1, fildName: '№' },
   { id: 2, fildName: 'Terminal id' },
   { id: 3, fildName: 'Route' },
@@ -40,7 +47,7 @@ const List: React.FC<ListProps> = ({ filter, items }) => {
   console.log(filteredItems);
   return (
     <div className="w-full border-[#F0F0F0] rounded-[8px] border-[0.5px]">
-      <HeaderList filds={filds} />
+      <HeaderList filds={fields} />
       {filteredItems.map((item, index) => (
         <div
           key={index + 1}
@@ -48,10 +55,12 @@ const List: React.FC<ListProps> = ({ filter, items }) => {
         >
           <div className="flex">
             <ListItemID id={index + 1} />
-            <ListItem title={item.terminal_id ?? item.terminalId} />
+            <ListItem
+              title={String(item?.terminal_id ?? item?.terminalId ?? '')}
+            />
             <ListItem title={item.name ?? ''} />
             <ListItem title={item?.bus_number ?? item?.busNumber ?? ''} />
-            <ListItem title={item?.stops[0] ?? ''} />
+            <ListItem title={item?.stops?.[0] ?? ''} />
             <ListItem title={item?.stops?.at(-1) ?? ''} />
           </div>
           <hr className="text-[#F0F0F0] w-full" />

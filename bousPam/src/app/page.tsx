@@ -18,8 +18,7 @@ export default function Auth() {
   const [login, setLogin] = useState('');
   const [code, setCode] = useState('');
   const [password, setPassword] = useState('');
-  const { getUser, setIsAuth }: any = useUserStore();
-  let user;
+  const { getUser, setIsAuth } = useUserStore();
 
   const logIn = async () => {
     // get login and password
@@ -31,7 +30,7 @@ export default function Auth() {
       return;
     }
 
-    user = await getUser(login, password);
+    await getUser(login, password);
     setIsModalOpen(true);
   };
   const verify = () => {

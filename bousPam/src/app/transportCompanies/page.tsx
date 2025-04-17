@@ -103,8 +103,8 @@ export default function Profile() {
   };
 
   const createCompany = () => {
-    let [owner_name, owner_surname] = modalFildsOwner.split(' ');
-    if (!owner_surname) owner_surname = owner_name;
+    const [owner_name, surname]: string[] = modalFildsOwner.split(' ');
+    const owner_surname = surname || owner_name;
 
     const newCompany = {
       name: modalFildsName,
