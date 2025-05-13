@@ -38,7 +38,7 @@
 
 4. Запустить контейнера: `docker run -p 3000:3000 bouspam-frontend`
 
-##Структура проекта
+## Структура проекта
 
 BousPamFrontend/
 
