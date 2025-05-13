@@ -23,9 +23,20 @@
   
 3. Установить все необходимые библиотеки и фреймворки: `yarn install`/ `npm install`
 
-4. Перейти в работчую директориию: `cd bousPam`
+4. Перейти в работчую директориию: `cd BousPamFrontend\bousPam`
 
 5. Запустить приложение: `yarn dev`/ `npm run dev`
+
+
+<h2 align="center">Запуск проекта с помощью контейнеризации</h2>
+
+1. Клонировать репозиторий: `git clone https://github.com/Reidego/BousPamFrontend.git`
+
+2. Перейти в работчую директориию: `cd bousPam`
+
+3. Билд контейнера `docker build -t bouspam-frontend .`
+
+4. Запустить контейнера: `docker run -p 3000:3000 bouspam-frontend`
 
 <h2 align="start">Структура проекта</h2>
 
