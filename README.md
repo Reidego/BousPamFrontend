@@ -38,29 +38,45 @@
 
 4. Запустить контейнера: `docker run -p 3000:3000 bouspam-frontend`
 
-<h2 align="start">Структура проекта</h2>
+##Структура проекта
 
 BousPamFrontend/
+
 ├── package.json
+
 ├── README.md
+
 ├── bousPam/
+
 │   ├── .env
+
 │   ├── .gitignore
+
 │   ├── .prettierignore
+
 │   ├── .prettierrc
+
 │   ├── eslint.config.mjs
+
 │   ├── next.config.ts
+
 │   ├── tsconfig.json
+
 │   ├── public/
+
 │   ├── src/
+
 │   │   ├── app/
+
 │   │   ├── components/
+
 │   │   ├── store/
+
 │   │   └── utils/
+
 │   └── .next/
 
-<h2 align="start">Основные компоненты</h>
-<p>
+## Основные компоненты
    
 1. Терминалы
 
@@ -100,4 +116,3 @@ BousPamFrontend/
 
 * Получение списка маршрутов.
 * Создание новых маршрутов.
-</p>
