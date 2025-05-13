@@ -27,7 +27,7 @@
 
 5. Запустить приложение: `yarn dev`/ `npm run dev`
 
-<h2 align="center">Структура проекта</h2>
+<h2 align="start">Структура проекта</h2>
 
 BousPamFrontend/
 ├── package.json
@@ -48,8 +48,8 @@ BousPamFrontend/
 │   │   └── utils/
 │   └── .next/
 
-<h2 align="center">Основные компоненты</h>
-
+<h2 align="start">Основные компоненты</h>
+<p>
 1. Терминалы
 Файл: src/app/terminals/page.tsx
 
@@ -83,3 +83,5 @@ BousPamFrontend/
 
 * Получение списка маршрутов.
 * Создание новых маршрутов.
+
+</p>
