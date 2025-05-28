@@ -21,7 +21,7 @@ const passengersFilds = [
   {
     id_operation: 1,
     cardtNumber: 1,
-    company: 'Company 1',
+    company: 'Bous Pam',
     data: '2023-10-01',
     time: '12:00',
     id_terminal: '1',
@@ -31,7 +31,7 @@ const passengersFilds = [
   {
     id_operation: 2,
     cardtNumber: 2,
-    company: 'Company 2',
+    company: 'Bous Pam',
     data: '2023-10-02',
     time: '14:00',
     id_terminal: '2',
@@ -41,7 +41,7 @@ const passengersFilds = [
   {
     id_operation: 3,
     cardtNumber: 3,
-    company: 'Company 3',
+    company: 'Bous Pam',
     data: '2023-10-03',
     time: '16:00',
     id_terminal: '3',
@@ -131,19 +131,19 @@ const List: React.FC = () => {
         </div>
       )}
       {operations.length > 0 &&
-        operations.map((item) => (
+        passengersFilds.map((passengersFilds) => (
           <div
-            key={item.id_operation}
+            key={passengersFilds.id_operation}
             className="bg-white h-[54px] text-black flex items-start "
           >
             <div className="flex">
-              <ListItemID id={item.id_operation} />
-              <ListItem title={item.company} />
-              <ListItem title={item.data} />
-              <ListItem title={item.time} />
-              <ListItem title={item.id_terminal} />
-              <ListItem title={item.balance_change} />
-              <Status status={item.state} />
+              <ListItemID id={passengersFilds.id_operation} />
+              <ListItem title={passengersFilds.company} />
+              <ListItem title={passengersFilds.data} />
+              <ListItem title={passengersFilds.time} />
+              <ListItem title={passengersFilds.id_terminal} />
+              <ListItem title={passengersFilds.balance_change} />
+              <Status status={passengersFilds.state} />
             </div>
           </div>
         ))}

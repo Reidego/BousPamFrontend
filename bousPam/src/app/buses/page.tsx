@@ -27,17 +27,17 @@ const fields = [
   { id: 4, fildName: 'Number' },
 ];
 
-const buses: {
-  id: number;
-  terminalId: string;
-  route: string;
-  number: string;
-}[] = [
-  { id: 1, terminalId: '123', route: 'A-B', number: 'AB123' },
-  { id: 2, terminalId: '456', route: 'B-C', number: 'BC456' },
-  { id: 3, terminalId: '789', route: 'C-D', number: 'CD789' },
-  { id: 4, terminalId: '101', route: 'D-E', number: 'DE101' },
-];
+// const buses: {
+//   id: number;
+//   terminalId: string;
+//   route: string;
+//   number: string;
+// }[] = [
+//   { id: 1, terminalId: '123', route: 'A-B', number: 'AB123' },
+//   { id: 2, terminalId: '456', route: 'B-C', number: 'BC456' },
+//   { id: 3, terminalId: '789', route: 'C-D', number: 'CD789' },
+//   { id: 4, terminalId: '101', route: 'D-E', number: 'DE101' },
+// ];
 
 const List: React.FC<ListProps> = ({ filter, items }) => {
   //   const { terminals } = useTerminalStore();

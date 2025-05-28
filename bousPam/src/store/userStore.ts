@@ -27,11 +27,12 @@ export const useUserStore = create<StoreState>((set) => ({
   },
   getUser: async (login: string, password: string) => {
     const user = await getUserByLogin({ login, password });
+    console.log('user', user);
     if (user?.name) {
       if (user?.role) {
         set(() => ({ role: user.role }));
       }
-      // set(() => ({ isAuth: true }));
+      set(() => ({ isAuth: true }));
       set(() => ({
         user: {
           name: `${user.name} ${user.surname}`,

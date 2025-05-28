@@ -1,24 +1,18 @@
 import { creatNewRoute, getAllRoutes } from '@/utils/api/routes';
-import {
-  creatNewCashier,
-  creatNewPassenger,
-  getAllCashiers,
-  getAllPassengers,
-  replenishPassenger,
-} from '@/utils/api/users';
+
 import { create } from 'zustand';
 
-interface Cashear {
-  id?: number;
-  name: string;
-  surname: string;
-  login: string;
-  password: string;
-  phone_number: string;
-  gender: string;
-  role: string;
-  date_of_birth: string;
-}
+// interface Cashear {
+//   id?: number;
+//   name: string;
+//   surname: string;
+//   login: string;
+//   password: string;
+//   phone_number: string;
+//   gender: string;
+//   role: string;
+//   date_of_birth: string;
+// }
 
 interface route {
   transport_company: string;

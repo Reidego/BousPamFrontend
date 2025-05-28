@@ -18,10 +18,9 @@ export default function Auth() {
   const [login, setLogin] = useState('');
   const [code, setCode] = useState('');
   const [password, setPassword] = useState('');
-  const { getUser, setIsAuth } = useUserStore();
+  const { setIsAuth, getUser } = useUserStore();
 
   const logIn = async () => {
-    // get login and password
     if (!login || !password) {
       openNotificationWithIcon(
         'error',
@@ -33,8 +32,10 @@ export default function Auth() {
     await getUser(login, password);
     setIsModalOpen(true);
   };
+
   const verify = () => {
     if (code === '123123') {
+      openNotificationWithIcon('success', 'Authorization successful.');
       router.push('/profile');
       setIsAuth(true);
     } else openNotificationWithIcon('error', 'Invalid confirmation code.');

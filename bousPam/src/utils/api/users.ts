@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = process.env.API_URL || 'http://185.65.200.150';
+const API_URL = process.env.API_URL || 'http://77.83.92.189';
 
 export const getCashierByName = async (name: string) => {
   try {
