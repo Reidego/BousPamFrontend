@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = process.env.API_URL || 'http://77.83.92.189';
+const API_URL = process.env.API_URL || 'http://46.17.250.142';
 
 export const getTerminalByCompanyName = async (companyName: string) => {
   try {

@@ -1,7 +1,7 @@
 import axios from 'axios';
 // import { config } from 'process';
 
-const API_URL = process.env.API_URL || 'http://77.83.92.189';
+const API_URL = process.env.API_URL || 'http://46.17.250.142';
 export default async function getUserByLogin(data: {
   login: string;
   password: string;

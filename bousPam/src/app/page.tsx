@@ -29,7 +29,12 @@ export default function Auth() {
       return;
     }
 
-    await getUser(login, password);
+    const user = await getUser(login, password);
+    console.log(user);
+    if (!user) {
+      openNotificationWithIcon('error', 'Incorrect login and password.');
+      return;
+    }
     setIsModalOpen(true);
   };
 

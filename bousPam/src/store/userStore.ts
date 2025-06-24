@@ -11,7 +11,7 @@ interface StoreState {
     role: string;
     birthdey: string;
   };
-  getUser: (login: string, password: string) => Promise<void>;
+  getUser: (login: string, password: string) => Promise<any>;
   setIsAuth: (auth: boolean) => void;
 }
 
@@ -27,11 +27,9 @@ export const useUserStore = create<StoreState>((set) => ({
   },
   getUser: async (login: string, password: string) => {
     const user = await getUserByLogin({ login, password });
-    console.log('user', user);
+    console.log(login, password);
     if (user?.name) {
-      if (user?.role) {
-        set(() => ({ role: user.role }));
-      }
+      set(() => ({ role: user.role }));
       set(() => ({ isAuth: true }));
       set(() => ({
         user: {
@@ -44,6 +42,7 @@ export const useUserStore = create<StoreState>((set) => ({
       }));
       return user;
     }
+    return undefined;
   },
   setIsAuth: (auth: boolean) => set(() => ({ isAuth: auth })),
 }));
